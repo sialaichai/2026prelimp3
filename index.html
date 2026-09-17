@@ -1543,30 +1543,33 @@
 
       const btn = document.getElementById('submit-btn');
       const originalText = btn.innerHTML;
-      btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Submitting...`;
+      btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Transmitting...`;
       btn.disabled = true;
 
       try {
+        const payloadString = JSON.stringify(payload);
+
+        // Primary: Plain text POST fetch
         await fetch(GOOGLE_SHEET_WEBAPP_URL, {
           method: 'POST',
           mode: 'no-cors',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify(payload)
+          body: payloadString
         });
 
-        btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> Submitted Successfully!`;
+        btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> Submitted!`;
         btn.className = "px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-xs sm:text-sm transition flex items-center gap-2 shadow-md";
-        showToast("Paper 3 submitted to Google Sheet successfully!", "success");
+        showToast("Paper 3 submitted! Check Google Sheet or Teacher Portal.", "success");
         
         setTimeout(() => {
           btn.innerHTML = originalText;
           btn.className = "px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-xs sm:text-sm transition flex items-center gap-2 shadow-md shadow-blue-600/20";
           btn.disabled = false;
-        }, 3000);
+        }, 3500);
 
       } catch (err) {
         console.error("Submission error:", err);
-        showToast("Network issue encountered. Please try again or download a backup.", "error");
+        showToast("Network issue encountered. Please verify connection or export backup.", "error");
         btn.innerHTML = originalText;
         btn.disabled = false;
       }
