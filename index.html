@@ -1,0 +1,2123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2026 JPJC H2 Physics Paper 3 Diagnostic & Feedback System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+    
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Print styling */
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #print-report-container, #print-report-container * {
+        visibility: visible;
+      }
+      #print-report-container {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        display: block !important;
+        background: white !important;
+        color: black !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased selection:bg-blue-500 selection:text-white">
+
+  <!-- Header -->
+  <header class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white border-b border-slate-800 sticky top-0 z-40 shadow-md no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-3.5">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-blue-500 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+          <i class="fa-solid fa-atom text-white text-xl"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] uppercase tracking-wider font-extrabold px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-400/30">JC2 Preliminary Examination</span>
+            <span class="text-[10px] text-slate-400 font-mono">SEAB Syllabus 9478/03 (Paper 3)</span>
+          </div>
+          <h1 class="text-base sm:text-lg font-black tracking-tight text-slate-100 flex items-center gap-2">
+            JPJC 2026 H2 Physics Paper 3 Diagnostic & Feedback System
+          </h1>
+        </div>
+      </div>
+
+      <!-- Action Utilities -->
+      <div class="flex items-center gap-2 text-xs">
+        <button type="button" onclick="triggerPrint()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-1.5 font-medium shadow-sm">
+          <i class="fa-solid fa-print text-blue-400"></i> Print Diagnostic
+        </button>
+        <button type="button" onclick="exportStudentBackup()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-1.5 font-medium shadow-sm">
+          <i class="fa-solid fa-download text-emerald-400"></i> Backup
+        </button>
+        <label class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-1.5 font-medium shadow-sm cursor-pointer">
+          <i class="fa-solid fa-upload text-amber-400"></i> Restore
+          <input type="file" id="restore-file-input" class="hidden" accept=".json" onchange="importStudentBackup(event)">
+        </label>
+        <button type="button" onclick="confirmResetPaper()" class="px-3 py-1.5 rounded-lg bg-rose-900/30 hover:bg-rose-900/50 text-rose-300 border border-rose-800/50 transition flex items-center gap-1.5 font-medium">
+          <i class="fa-solid fa-rotate-left"></i> Reset
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Score & Progress Ribbon -->
+  <section class="bg-white border-b border-slate-200 py-3 no-print shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-4 sm:gap-6">
+        <div>
+          <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">Total Score</span>
+          <div class="flex items-baseline gap-1">
+            <span id="header-score" class="text-2xl sm:text-3xl font-black font-mono text-slate-900">0</span>
+            <span class="text-slate-400 font-bold text-sm font-mono">/ 75</span>
+          </div>
+        </div>
+        <div class="h-8 w-px bg-slate-200"></div>
+        <div>
+          <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">Percentage</span>
+          <span id="header-percentage" class="text-xl sm:text-2xl font-black font-mono text-blue-600">0.0%</span>
+        </div>
+        <div class="h-8 w-px bg-slate-200"></div>
+        <div>
+          <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">H2 Grade</span>
+          <span id="header-grade" class="text-xl sm:text-2xl font-black font-mono text-rose-600">U</span>
+        </div>
+        <div class="h-8 w-px bg-slate-200"></div>
+        <div>
+          <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">Section B Option</span>
+          <span id="header-section-b-choice" class="text-xs font-bold font-mono px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200">Q8 Selected</span>
+        </div>
+      </div>
+
+      <!-- Distinction Gap and Submission Status -->
+      <div class="flex items-center gap-3">
+        <div class="hidden sm:flex flex-col text-right">
+          <span class="text-[11px] font-semibold text-slate-500" id="distinction-label">53 Marks to Distinction ('A')</span>
+          <div class="w-36 h-2 bg-slate-100 rounded-full overflow-hidden mt-1 border border-slate-200">
+            <div id="distinction-progress-bar" class="h-full bg-gradient-to-r from-blue-500 to-indigo-600 w-0 transition-all duration-300"></div>
+          </div>
+        </div>
+        <button type="button" onclick="submitToTeacher()" id="submit-btn" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-xs sm:text-sm transition flex items-center gap-2 shadow-md shadow-blue-600/20">
+          <i class="fa-solid fa-cloud-arrow-up"></i> Submit to Teacher
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Workspace -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full space-y-6">
+    
+    <!-- Navigation Tabs -->
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden no-print">
+      <nav class="flex flex-wrap border-b border-slate-200">
+        <button type="button" onclick="switchTab('tab-entry')" id="tab-btn-entry" class="tab-btn py-3.5 px-4 sm:px-6 text-xs sm:text-sm font-bold border-b-2 border-blue-600 text-blue-600 flex items-center gap-2">
+          <i class="fa-solid fa-pen-to-square"></i> 1. Mark Entry (Sec A & Sec B)
+        </button>
+        <button type="button" onclick="switchTab('tab-analytics')" id="tab-btn-analytics" class="tab-btn py-3.5 px-4 sm:px-6 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2">
+          <i class="fa-solid fa-chart-pie"></i> 2. Visual Analytics (Thinking Skills & Topics)
+        </button>
+        <button type="button" onclick="switchTab('tab-feedback')" id="tab-btn-feedback" class="tab-btn py-3.5 px-4 sm:px-6 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2">
+          <i class="fa-solid fa-clipboard-check"></i> 3. Advisory & Coaching
+        </button>
+        <button type="button" onclick="switchTab('tab-topic-alignment')" id="tab-btn-topic-alignment" class="tab-btn py-3.5 px-4 sm:px-6 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2">
+          <i class="fa-solid fa-bullseye text-indigo-500"></i> 4. Syllabus Topic Alignment & Remedial Advice
+        </button>
+        <button type="button" onclick="switchTab('tab-teacher')" id="tab-btn-teacher" class="tab-btn py-3.5 px-4 sm:px-6 text-xs sm:text-sm font-bold border-b-2 border-transparent text-indigo-600 hover:text-indigo-800 flex items-center gap-2 bg-indigo-50/50">
+          <i class="fa-solid fa-lock text-amber-500" id="teacher-tab-lock-icon"></i> 5. Teacher Portal
+          <span id="cohort-badge" class="px-2 py-0.5 rounded-full text-[10px] bg-indigo-600 text-white font-mono">0</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- Tab 1: Mark Entry -->
+    <div id="tab-entry" class="tab-content space-y-6">
+      <!-- Student Particulars Card -->
+      <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+          <h2 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+            <i class="fa-solid fa-id-card text-blue-600"></i> Student Particulars
+          </h2>
+          <span class="text-[11px] text-slate-400 font-medium">Synced with Teacher Google Sheet</span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Student Full Name <span class="text-rose-500">*</span></label>
+            <input type="text" id="student-name" placeholder="e.g. Rachel Lim" oninput="saveStudentParticulars()" class="w-full text-xs sm:text-sm px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Class <span class="text-rose-500">*</span></label>
+            <input type="text" id="student-class" placeholder="e.g. 26S01" oninput="saveStudentParticulars()" class="w-full text-xs sm:text-sm px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Physics Tutor <span class="text-rose-500">*</span></label>
+            <select id="student-tutor" onchange="saveStudentParticulars()" class="w-full text-xs sm:text-sm px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition bg-white">
+              <option value="">Select Tutor...</option>
+              <option value="Mr Lee">Mr Lee</option>
+              <option value="Mr Oh">Mr Oh</option>
+              <option value="Mr Pang">Mr Pang</option>
+              <option value="Mr Sia">Mr Sia</option>
+              <option value="Mr Tan">Mr Tan</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section B Option Choice Selector -->
+      <div class="bg-gradient-to-r from-indigo-900 to-slate-900 text-white p-5 rounded-2xl shadow-sm space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <span class="text-[10px] uppercase font-bold tracking-wider text-indigo-300">Section B Candidate Selection (20 Marks)</span>
+            <h3 class="text-sm sm:text-base font-black">Choose your attempted Section B Question:</h3>
+            <p class="text-xs text-slate-300 mt-0.5">Under SEAB Syllabus 9478/03, candidates answer either Question 8 OR Question 9. Your total score is calculated out of 75 marks.</p>
+          </div>
+          <div class="flex items-center gap-2 bg-white/10 p-1.5 rounded-xl border border-white/10">
+            <button type="button" onclick="setSectionBChoice('Q8')" id="sec-b-btn-Q8" class="px-3.5 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-blue-600 text-white shadow-sm">
+              <i class="fa-solid fa-bolt"></i> Q8: Electric Fields & Capacitors (20m)
+            </button>
+            <button type="button" onclick="setSectionBChoice('Q9')" id="sec-b-btn-Q9" class="px-3.5 py-2 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 bg-transparent text-slate-300 hover:text-white">
+              <i class="fa-solid fa-radiation"></i> Q9: Nuclear Physics & Decay (20m)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Guidance Banner -->
+      <div class="p-4 rounded-xl bg-blue-50 border border-blue-200 text-blue-900 text-xs flex items-start gap-3">
+        <i class="fa-solid fa-circle-info text-blue-600 text-base mt-0.5"></i>
+        <div class="leading-relaxed">
+          <span class="font-bold">Booklet Page-by-Page Guided Data Entry:</span> 
+          Questions are organized into alternating colored blocks corresponding to the physical pages of your 2026 JPJC Paper 3 booklet (Pages 4 to 28). 
+          Click the earned mark for each sub-part. If you dropped marks, tag the error cause (Careless, Recall, Concept, Keywords, or Time) to generate targeted diagnostic coaching.
+        </div>
+      </div>
+
+      <!-- Question Cards Render Container -->
+      <div id="question-cards-container" class="space-y-6">
+        <!-- Dynamically rendered -->
+      </div>
+    </div>
+
+    <!-- Tab 2: Visual Analytics -->
+    <div id="tab-analytics" class="tab-content hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Thinking Skills Radar Chart -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+            <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+              <i class="fa-solid fa-brain text-purple-600"></i> Physics Thinking & Question Skills Profile
+            </h3>
+            <span class="text-[11px] font-semibold text-slate-400">SEAB Command Word Analysis</span>
+          </div>
+          <div class="relative w-full h-72 flex items-center justify-center">
+            <canvas id="bloomRadarChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Syllabus Topic Bar Chart -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+            <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+              <i class="fa-solid fa-chart-simple text-blue-600"></i> Topic Mastery Breakdown
+            </h3>
+            <span class="text-[11px] font-semibold text-slate-400">Mastery % by Topic</span>
+          </div>
+          <div class="relative w-full h-72 flex items-center justify-center">
+            <canvas id="topicBarChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detailed Mark Breakdown Table -->
+      <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+        <h3 class="font-bold text-slate-900 text-sm mb-3">Thinking Skills & Topic Detailed Mark Distribution</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr class="border-b border-slate-200 text-slate-500 font-bold bg-slate-50">
+                <th class="py-2.5 px-3">Classification Dimension</th>
+                <th class="py-2.5 px-3">Questions Included</th>
+                <th class="py-2.5 px-3">Marks Earned / Max</th>
+                <th class="py-2.5 px-3">Mastery Rate</th>
+                <th class="py-2.5 px-3">Status</th>
+              </tr>
+            </thead>
+            <tbody id="analytics-table-body" class="divide-y divide-slate-100">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 3: Advisory & Coaching -->
+    <div id="tab-feedback" class="tab-content hidden space-y-6">
+      <!-- Target Grade Recovery Trajectory -->
+      <div class="bg-gradient-to-br from-indigo-900 via-slate-900 to-slate-900 text-white rounded-2xl p-6 shadow-md space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <span class="text-[11px] font-bold text-blue-300 uppercase tracking-wider">Algorithmic Recovery Engine</span>
+            <h3 class="text-base sm:text-lg font-black text-white flex items-center gap-2">
+              <i class="fa-solid fa-stairs text-amber-400"></i> Target Grade Recovery Trajectory
+            </h3>
+          </div>
+          <div class="flex items-center gap-2 text-xs">
+            <span class="text-slate-300 font-medium">Select Target:</span>
+            <button type="button" onclick="setTargetGrade('A')" id="target-btn-A" class="px-2.5 py-1 rounded font-bold bg-blue-600 text-white">A (53m)</button>
+            <button type="button" onclick="setTargetGrade('B')" id="target-btn-B" class="px-2.5 py-1 rounded font-bold bg-slate-800 text-slate-300 hover:bg-slate-700">B (45m)</button>
+            <button type="button" onclick="setTargetGrade('C')" id="target-btn-C" class="px-2.5 py-1 rounded font-bold bg-slate-800 text-slate-300 hover:bg-slate-700">C (42m)</button>
+            <button type="button" onclick="setTargetGrade('D')" id="target-btn-D" class="px-2.5 py-1 rounded font-bold bg-slate-800 text-slate-300 hover:bg-slate-700">D (38m)</button>
+          </div>
+        </div>
+        <div id="recovery-recommendation-box" class="p-4 rounded-xl bg-white/10 border border-white/10 text-xs sm:text-sm text-slate-200 leading-relaxed">
+          <!-- Dynamically generated -->
+        </div>
+      </div>
+
+      <!-- Mark Leak Root-Cause Diagnosis -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3">
+        <div class="flex items-center justify-between">
+          <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+            <i class="fa-solid fa-stethoscope text-rose-600"></i> Mark Leak Root-Cause Diagnosis
+          </h3>
+          <span class="text-xs text-slate-500">Categorized from your mark entry tags</span>
+        </div>
+        <div id="error-causes-summary" class="grid grid-cols-2 sm:grid-cols-5 gap-3 pt-1">
+          <!-- Dynamically filled -->
+        </div>
+      </div>
+
+      <!-- Thinking Skills Diagnostic Cards -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+        <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2 mb-3">
+          <i class="fa-solid fa-lightbulb text-amber-500"></i> Physics Thinking Skills Diagnostic Advisory
+        </h3>
+        <div id="bloom-feedback-cards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 4: Syllabus Topic Alignment -->
+    <div id="tab-topic-alignment" class="tab-content hidden space-y-6">
+      <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-3">
+          <div>
+            <span class="text-[11px] font-bold text-indigo-600 uppercase tracking-wider">SEAB Syllabus 9478 Alignment</span>
+            <h3 class="font-black text-slate-900 text-base flex items-center gap-2">
+              <i class="fa-solid fa-bullseye text-indigo-600"></i> Student Topic Performance & Targeted Remedial Advice
+            </h3>
+          </div>
+          <div class="flex items-center gap-2 text-xs">
+            <span class="text-slate-500 font-semibold">Filter:</span>
+            <button type="button" onclick="filterTopicAdvice('all')" id="topic-filter-all" class="px-3 py-1 rounded-lg font-bold bg-indigo-600 text-white">All Tested Topics</button>
+            <button type="button" onclick="filterTopicAdvice('critical')" id="topic-filter-critical" class="px-3 py-1 rounded-lg font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200">Critical Focus (&lt;50%)</button>
+            <button type="button" onclick="filterTopicAdvice('consolidate')" id="topic-filter-consolidate" class="px-3 py-1 rounded-lg font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200">Consolidate (50-69%)</button>
+          </div>
+        </div>
+
+        <!-- Pedagogical Perspective Banner -->
+        <div class="p-3 rounded-xl bg-amber-50/70 border border-amber-200 text-amber-900 text-xs flex items-center gap-2.5">
+          <i class="fa-solid fa-shield-halved text-amber-600 text-sm shrink-0"></i>
+          <span>
+            <strong>Pedagogical Note:</strong> Ratings reflect execution on the <em>specific question contexts</em> in this paper. A <strong>"Secure in this Paper"</strong> rating confirms sound execution here, but does not substitute for thorough revision across all syllabus permutations.
+          </span>
+        </div>
+
+        <div id="topic-alignment-cards" class="grid grid-cols-1 gap-5">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 5: Teacher Portal -->
+    <div id="tab-teacher" class="tab-content hidden space-y-6">
+      <!-- Locked State Card -->
+      <div id="teacher-gate-card" class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm max-w-md mx-auto text-center space-y-4">
+        <div class="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto text-2xl shadow-inner">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <div>
+          <h3 class="text-lg font-black text-slate-900">Teacher Portal Authentication</h3>
+          <p class="text-xs text-slate-500 mt-1">Enter the common Physics Teacher Password to view student submissions.</p>
+        </div>
+        <div class="space-y-3 pt-2">
+          <div class="relative">
+            <input type="password" id="teacher-pin-input" placeholder="Enter Teacher Password" onkeydown="if(event.key==='Enter') unlockTeacherPortal()" class="w-full text-center text-sm tracking-wider px-4 py-3 rounded-xl border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none">
+            <button type="button" onclick="togglePinVisibility()" class="absolute right-3 top-3 text-slate-400 hover:text-slate-600 text-sm">
+              <i class="fa-solid fa-eye" id="pin-eye-icon"></i>
+            </button>
+          </div>
+          <div id="pin-error-msg" class="text-xs text-rose-600 font-semibold hidden"></div>
+          <button type="button" onclick="unlockTeacherPortal()" id="unlock-btn" class="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold text-sm transition flex items-center justify-center gap-2 shadow-md shadow-indigo-600/20">
+            <i class="fa-solid fa-key"></i> Unlock Portal
+          </button>
+        </div>
+      </div>
+
+      <!-- Authenticated Teacher Dashboard -->
+      <div id="teacher-dashboard" class="hidden space-y-6">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-4">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-lg">
+                <i class="fa-solid fa-lock-open"></i>
+              </div>
+              <div>
+                <h3 class="font-bold text-slate-900 text-base">Physics Cohort Dashboard</h3>
+                <span class="text-xs text-slate-400">Live submissions from Google Sheet</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <button type="button" onclick="loadCohortFromGoogleSheet(true)" class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition flex items-center gap-1.5">
+                <i class="fa-solid fa-rotate text-indigo-600" id="refresh-icon"></i> Refresh
+              </button>
+              <button type="button" onclick="exportCohortCSV()" class="px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
+                <i class="fa-solid fa-file-csv"></i> Export CSV
+              </button>
+              <button type="button" onclick="lockTeacherPortal()" class="px-3 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-bold transition flex items-center gap-1.5 border border-rose-200">
+                <i class="fa-solid fa-lock"></i> Lock
+              </button>
+            </div>
+          </div>
+
+          <!-- Cohort Metrics Cards -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+              <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Total Submissions</span>
+              <span id="metric-total-subs" class="text-2xl font-black font-mono text-slate-900">0</span>
+            </div>
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+              <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Cohort Mean Score</span>
+              <div class="flex items-baseline gap-1">
+                <span id="metric-mean-score" class="text-2xl font-black font-mono text-blue-600">0.0</span>
+                <span class="text-[10px] text-slate-400">/ 75</span>
+              </div>
+            </div>
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+              <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Distinction Rate</span>
+              <span id="metric-distinction-rate" class="text-2xl font-black font-mono text-indigo-600">0.0%</span>
+              <span class="text-[10px] text-slate-400 block">(Score &ge; 53)</span>
+            </div>
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+              <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Pass Rate (&ge; E)</span>
+              <span id="metric-pass-rate" class="text-2xl font-black font-mono text-emerald-600">0.0%</span>
+              <span class="text-[10px] text-slate-400 block">(Score &ge; 34)</span>
+            </div>
+          </div>
+
+          <!-- Roster Filter Controls -->
+          <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+            <div class="flex items-center gap-2">
+              <label class="text-xs font-bold text-slate-600">Filter by Tutor:</label>
+              <select id="teacher-tutor-filter" onchange="renderCohortTable()" class="text-xs px-3 py-1.5 rounded-lg border border-slate-300 bg-white font-medium focus:ring-1 focus:ring-indigo-500 outline-none">
+                <option value="ALL">All Tutors</option>
+                <option value="Mr Lee">Mr Lee</option>
+                <option value="Mr Oh">Mr Oh</option>
+                <option value="Mr Pang">Mr Pang</option>
+                <option value="Mr Sia">Mr Sia</option>
+                <option value="Mr Tan">Mr Tan</option>
+              </select>
+            </div>
+            <div class="relative w-full sm:w-64">
+              <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
+              <input type="text" id="roster-search" placeholder="Search student name or class..." oninput="renderCohortTable()" class="w-full text-xs pl-8 pr-3 py-1.5 rounded-lg border border-slate-300 focus:ring-1 focus:ring-indigo-500 outline-none">
+            </div>
+          </div>
+
+          <!-- Student Roster Table -->
+          <div class="overflow-x-auto border border-slate-200 rounded-xl">
+            <table class="w-full text-left text-xs border-collapse">
+              <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200">
+                <tr>
+                  <th class="py-3 px-3.5">Student Name</th>
+                  <th class="py-3 px-3.5">Class</th>
+                  <th class="py-3 px-3.5">Tutor</th>
+                  <th class="py-3 px-3.5 text-center">Score / 75</th>
+                  <th class="py-3 px-3.5 text-center">%</th>
+                  <th class="py-3 px-3.5 text-center">Grade</th>
+                  <th class="py-3 px-3.5">Sec B</th>
+                  <th class="py-3 px-3.5">Submitted At</th>
+                  <th class="py-3 px-3.5 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="cohort-table-body" class="divide-y divide-slate-100">
+                <!-- Dynamically rendered -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Hidden Print Container -->
+  <div id="print-report-container" class="hidden p-8 space-y-6"></div>
+
+  <!-- Interactive Print & PDF Preview Modal -->
+  <div id="print-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 hidden no-print">
+    <div class="bg-white w-full max-w-4xl rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[90vh]">
+      <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between border-b border-slate-800">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-sm shadow-md">
+            <i class="fa-solid fa-file-invoice"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-sm leading-tight">Official Examination Diagnostic Report</h3>
+            <p class="text-[11px] text-slate-400">Print or Save as PDF</p>
+          </div>
+        </div>
+        <button type="button" onclick="closePrintModal()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Printable Canvas View -->
+      <div class="p-6 overflow-y-auto space-y-5 flex-1 bg-slate-50/50">
+        <div id="modal-report-canvas" class="bg-white p-6 rounded-xl border border-slate-200 shadow-xs space-y-5 text-slate-800">
+          <!-- Dynamically filled -->
+        </div>
+      </div>
+
+      <div class="px-6 py-3.5 bg-white border-t border-slate-200 flex flex-wrap items-center justify-between gap-3">
+        <button type="button" onclick="closePrintModal()" class="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 font-semibold transition text-xs">
+          Close
+        </button>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="openPrintInNewWindow()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold transition text-xs flex items-center gap-1.5 shadow-sm">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> Open in New Window
+          </button>
+          <button type="button" onclick="triggerBrowserPrint()" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold transition text-xs flex items-center gap-1.5 shadow-md shadow-blue-600/20">
+            <i class="fa-solid fa-print"></i> Print / Save as PDF
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Student Inspection Modal -->
+  <div id="inspect-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 hidden no-print">
+    <div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[90vh]">
+      <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-sm">
+            <i class="fa-solid fa-user-graduate"></i>
+          </div>
+          <div>
+            <h3 id="inspect-modal-title" class="font-bold text-sm leading-tight">Student Inspection</h3>
+            <p id="inspect-modal-subtitle" class="text-[11px] text-slate-300">Detailed breakdown</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeInspectModal()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="p-6 overflow-y-auto space-y-5 flex-1 text-xs">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+          <div><span class="text-slate-400 block text-[10px] uppercase font-bold">Class</span><strong id="inspect-class" class="text-slate-900 text-xs">-</strong></div>
+          <div><span class="text-slate-400 block text-[10px] uppercase font-bold">Tutor</span><strong id="inspect-tutor" class="text-slate-900 text-xs">-</strong></div>
+          <div><span class="text-slate-400 block text-[10px] uppercase font-bold">Total Score</span><strong id="inspect-score" class="text-blue-600 text-xs font-mono font-bold">0 / 75</strong></div>
+          <div><span class="text-slate-400 block text-[10px] uppercase font-bold">Grade</span><strong id="inspect-grade" class="text-xs font-mono font-bold">U</strong></div>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-slate-800 mb-2 flex items-center gap-1.5">
+            <i class="fa-solid fa-list-check text-blue-600"></i> Marks Breakdown by Sub-part
+          </h4>
+          <div id="inspect-breakdown-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-2 max-h-60 overflow-y-auto p-1">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+      </div>
+
+      <div class="px-6 py-3.5 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
+        <button type="button" onclick="closeInspectModal()" class="px-3.5 py-2 rounded-xl text-slate-600 hover:bg-slate-200 font-semibold transition text-xs">
+          Close
+        </button>
+        <button type="button" id="inspect-load-btn" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold transition text-xs flex items-center gap-2 shadow-sm shadow-blue-600/20">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i> Load into Workspace & Analytics
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Configured Google Sheet Web App Endpoint for Paper 3
+    const GOOGLE_SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyzh66h7WSYDqUCSX14a32THjpmf11_6PAU72zR2RkaGghBVP94XqhgL0ePg80j4jW6/exec";
+
+    // 2026 JPJC Paper 3 Physical Examination Booklet Page Groupings
+    const BOOKLET_PAGE_GROUPS_SEC_A = [
+      { page: 4, section: 'A', qns: ['1(a)'] },
+      { page: 5, section: 'A', qns: ['1(b)(i)', '1(b)(ii)'] },
+      { page: 6, section: 'A', qns: ['2(a)', '2(b)(i)'] },
+      { page: 7, section: 'A', qns: ['2(b)(ii)1', '2(b)(ii)2'] },
+      { page: 8, section: 'A', qns: ['3(a)'] },
+      { page: 9, section: 'A', qns: ['3(b)', '3(c)'] },
+      { page: 10, section: 'A', qns: ['4(a)', '4(b)(i)'] },
+      { page: 11, section: 'A', qns: ['4(b)(ii)', '4(b)(iii)'] },
+      { page: 12, section: 'A', qns: ['5(a)(i)', '5(a)(ii)'] },
+      { page: 13, section: 'A', qns: ['5(b)(i)', '5(b)(ii)'] },
+      { page: 14, section: 'A', qns: ['5(c)(i)', '5(c)(ii)'] },
+      { page: 15, section: 'A', qns: ['6(a)', '6(b)(i)'] },
+      { page: 16, section: 'A', qns: ['6(b)(ii)'] },
+      { page: 17, section: 'A', qns: ['6(c)(i)', '6(c)(ii)'] },
+      { page: 18, section: 'A', qns: ['7(a)', '7(b)(i)', '7(b)(ii)'] },
+      { page: 19, section: 'A', qns: ['7(c)'] }
+    ];
+
+    const BOOKLET_PAGE_GROUPS_Q8 = [
+      { page: 20, section: 'B', opt: 'Q8', qns: ['8(a)(i)', '8(a)(ii)', '8(a)(iii)', '8(b)(i)'] },
+      { page: 21, section: 'B', opt: 'Q8', qns: ['8(b)(ii)1'] },
+      { page: 22, section: 'B', opt: 'Q8', qns: ['8(b)(ii)2', '8(b)(ii)3', '8(c)'] },
+      { page: 23, section: 'B', opt: 'Q8', qns: ['8(d)(i)'] },
+      { page: 24, section: 'B', opt: 'Q8', qns: ['8(d)(ii)'] }
+    ];
+
+    const BOOKLET_PAGE_GROUPS_Q9 = [
+      { page: 25, section: 'B', opt: 'Q9', qns: ['9(a)(i)', '9(a)(ii)'] },
+      { page: 26, section: 'B', opt: 'Q9', qns: ['9(b)(i)', '9(b)(ii)'] },
+      { page: 27, section: 'B', opt: 'Q9', qns: ['9(c)(i)', '9(c)(ii)', '9(d)(i)1', '9(d)(i)2'] },
+      { page: 28, section: 'B', opt: 'Q9', qns: ['9(d)(ii)', '9(d)(iii)', '9(d)(iv)'] }
+    ];
+
+    // All 49 Sub-parts for Paper 3 categorized strictly from paper3_bloom.txt
+    const ALL_QUESTIONS = [
+      // SECTION A (Total: 55 Marks)
+      // Q1: Kinematics (7m)
+      { id: '1(a)', title: '1(a)', max: 3, section: 'A', topicId: 2, topic: 'Topic 2: Kinematics', bloom: 'Apply', desc: 'Objects A and B released from building; calculate initial velocity u' },
+      { id: '1(b)(i)', title: '1(b)(i)', max: 2, section: 'A', topicId: 2, topic: 'Topic 2: Kinematics', bloom: 'Analyse', desc: 'Object B released at angle θ to vertical; time taken comparison' },
+      { id: '1(b)(ii)', title: '1(b)(ii)', max: 2, section: 'A', topicId: 2, topic: 'Topic 2: Kinematics', bloom: 'Analyse', desc: 'Effect of change in release angle on impact speed at ground' },
+
+      // Q2: Dynamics & Momentum (9m)
+      { id: '2(a)', title: '2(a)', max: 1, section: 'A', topicId: 3, topic: 'Topic 3: Dynamics & Momentum', bloom: 'Analyse', desc: 'State and explain whether bouncing ball collision is elastic or inelastic' },
+      { id: '2(b)(i)', title: '2(b)(i)', max: 2, section: 'A', topicId: 3, topic: 'Topic 3: Dynamics & Momentum', bloom: 'Apply', desc: 'Determine magnitude and direction of change in momentum' },
+      { id: '2(b)(ii)1', title: '2(b)(ii)1', max: 3, section: 'A', topicId: 3, topic: 'Topic 3: Dynamics & Momentum', bloom: 'Analyse', desc: 'Calculate the force on the ground during the collision' },
+      { id: '2(b)(ii)2', title: '2(b)(ii)2', max: 3, section: 'A', topicId: 3, topic: 'Topic 3: Dynamics & Momentum', bloom: 'Analyse', desc: 'Sketch variation of resultant force on the ball with numerical values' },
+
+      // Q3: Forces & Equilibrium (8m)
+      { id: '3(a)', title: '3(a)', max: 3, section: 'A', topicId: 4, topic: 'Topic 4: Forces & Equilibrium', bloom: 'Apply', desc: 'Uniform hinged metal bar supported by rope; calculate force F' },
+      { id: '3(b)', title: '3(b)', max: 2, section: 'A', topicId: 4, topic: 'Topic 4: Forces & Equilibrium', bloom: 'Analyse', desc: 'State and explain how F changes if applied at a smaller angle' },
+      { id: '3(c)', title: '3(c)', max: 3, section: 'A', topicId: 4, topic: 'Topic 4: Forces & Equilibrium', bloom: 'Apply', desc: 'Calculate the magnitude of reaction force R at hinge A' },
+
+      // Q4: Wave Motion & Polarisation (7m)
+      { id: '4(a)', title: '4(a)', max: 2, section: 'A', topicId: 12, topic: 'Topic 12: Wave Motion', bloom: 'Understand', desc: 'Explain polarisation and why longitudinal sound waves cannot be polarised' },
+      { id: '4(b)(i)', title: '4(b)(i)', max: 2, section: 'A', topicId: 12, topic: 'Topic 12: Wave Motion', bloom: 'Analyse', desc: 'Sketch air molecule displacement vs time from excess pressure graph' },
+      { id: '4(b)(ii)', title: '4(b)(ii)', max: 2, section: 'A', topicId: 12, topic: 'Topic 12: Wave Motion', bloom: 'Apply', desc: 'Determine speed of sound wave from phase difference of 3.50 rad' },
+      { id: '4(b)(iii)', title: '4(b)(iii)', max: 1, section: 'A', topicId: 12, topic: 'Topic 12: Wave Motion', bloom: 'Analyse', desc: 'Suggest why sound amplitude does not decrease inversely with distance' },
+
+      // Q5: D.C. Circuits (8m)
+      { id: '5(a)(i)', title: '5(a)(i)', max: 2, section: 'A', topicId: 15, topic: 'Topic 15: D.C. Circuits', bloom: 'Apply', desc: 'Battery with 48 Ω resistor; calculate internal resistance' },
+      { id: '5(a)(ii)', title: '5(a)(ii)', max: 1, section: 'A', topicId: 15, topic: 'Topic 15: D.C. Circuits', bloom: 'Apply', desc: 'Determine energy dissipated in 48 Ω resistor in 2 minutes' },
+      { id: '5(b)(i)', title: '5(b)(i)', max: 2, section: 'A', topicId: 15, topic: 'Topic 15: D.C. Circuits', bloom: 'Analyse', desc: 'Show minimum resistance of component C is approximately 3.0 Ω' },
+      { id: '5(b)(ii)', title: '5(b)(ii)', max: 1, section: 'A', topicId: 15, topic: 'Topic 15: D.C. Circuits', bloom: 'Analyse', desc: 'Explain how energy dissipated changes when component C is in parallel' },
+      { id: '5(c)(i)', title: '5(c)(i)', max: 1, section: 'A', topicId: 15, topic: 'Topic 15: D.C. Circuits', bloom: 'Apply', desc: 'Determine the gradient of R vs l graph for uniform metal wire' },
+      { id: '5(c)(ii)', title: '5(c)(ii)', max: 1, section: 'A', topicId: 15, topic: 'Topic 15: D.C. Circuits', bloom: 'Apply', desc: 'Determine resistivity of metal wire using cross-sectional area' },
+
+      // Q6: Electromagnetic Induction (9m)
+      { id: '6(a)', title: '6(a)', max: 1, section: 'A', topicId: 17, topic: 'Topic 17: Electromagnetic Induction', bloom: 'Apply', desc: 'Show magnetic flux linkage for rotating coil is 1.8×10⁻³ Wb at θ=0' },
+      { id: '6(b)(i)', title: '6(b)(i)', max: 2, section: 'A', topicId: 17, topic: 'Topic 17: Electromagnetic Induction', bloom: 'Apply', desc: 'Calculate average induced e.m.f. from θ = 0 to θ = 45°' },
+      { id: '6(b)(ii)', title: '6(b)(ii)', max: 2, section: 'A', topicId: 17, topic: 'Topic 17: Electromagnetic Induction', bloom: 'Analyse', desc: 'Explain why the induced e.m.f. is sinusoidal over rotation cycle' },
+      { id: '6(c)(i)', title: '6(c)(i)', max: 1, section: 'A', topicId: 17, topic: 'Topic 17: Electromagnetic Induction', bloom: 'Recall', desc: 'State Lenz\'s law of electromagnetic induction' },
+      { id: '6(c)(ii)', title: '6(c)(ii)', max: 3, section: 'A', topicId: 17, topic: 'Topic 17: Electromagnetic Induction', bloom: 'Analyse', desc: 'Explain why a force is needed to remove small solenoid P from Q' },
+
+      // Q7: Quantum Physics - Infinite Square Well (7m)
+      { id: '7(a)', title: '7(a)', max: 1, section: 'A', topicId: 19, topic: 'Topic 19: Quantum Physics', bloom: 'Recall', desc: 'State the physical significance of |ψ|² in quantum mechanics' },
+      { id: '7(b)(i)', title: '7(b)(i)', max: 2, section: 'A', topicId: 19, topic: 'Topic 19: Quantum Physics', bloom: 'Analyse', desc: 'Explain how superposition leads to the infinite square well wavefunctions' },
+      { id: '7(b)(ii)', title: '7(b)(ii)', max: 2, section: 'A', topicId: 19, topic: 'Topic 19: Quantum Physics', bloom: 'Apply', desc: 'Determine probability of finding electron in L/3 ≤ x ≤ L/2 for n = 3' },
+      { id: '7(c)', title: '7(c)', max: 2, section: 'A', topicId: 19, topic: 'Topic 19: Quantum Physics', bloom: 'Apply', desc: 'Calculate energy to excite electron from ground state to first excited state' },
+
+      // SECTION B - OPTION 1: Q8 Electric Fields & Capacitors (20m)
+      { id: '8(a)(i)', title: '8(a)(i)', max: 1, section: 'B', opt: 'Q8', topicId: 14, topic: 'Topic 14: Electric Fields & Capacitance', bloom: 'Recall', desc: 'State what is meant by a field of force' },
+      { id: '8(a)(ii)', title: '8(a)(ii)', max: 1, section: 'B', opt: 'Q8', topicId: 14, topic: 'Topic 14: Electric Fields & Capacitance', bloom: 'Recall', desc: 'Define electric field strength' },
+      { id: '8(a)(iii)', title: '8(a)(iii)', max: 1, section: 'B', opt: 'Q8', topicId: 14, topic: 'Topic 14: Electric Fields & Capacitance', bloom: 'Analyse', desc: 'Suggest why the test particle must be stationary when defining E' },
+      { id: '8(b)(i)', title: '8(b)(i)', max: 1, section: 'B', opt: 'Q8', topicId: 14, topic: 'Topic 14: Electric Fields & Capacitance', bloom: 'Recall', desc: 'State the relation between electric field strength E and potential V' },
+      { id: '8(b)(ii)1', title: '8(b)(ii)1', max: 2, section: 'B', opt: 'Q8', topicId: 14, topic: 'Topic 14: Electric Fields & Capacitance', bloom: 'Analyse', desc: 'State and explain direction of electric field at x = 25.0 cm' },
+      { id: '8(b)(ii)2', title: '8(b)(ii)2', max: 3, section: 'B', opt: 'Q8', topicId: 14, topic: 'Topic 14: Electric Fields & Capacitance', bloom: 'Analyse', desc: 'Determine the force on an electron placed at x = 35.0 cm' },
+      { id: '8(b)(ii)3', title: '8(b)(ii)3', max: 2, section: 'B', opt: 'Q8', topicId: 14, topic: 'Topic 14: Electric Fields & Capacitance', bloom: 'Analyse', desc: 'Explain why potential is constant inside sphere between x = 0 and 9.0 cm' },
+      { id: '8(c)', title: '8(c)', max: 3, section: 'B', opt: 'Q8', topicId: 14, topic: 'Topic 14: Electric Fields & Capacitance', bloom: 'Apply', desc: 'Calculate minimum speed of electron approaching from infinity' },
+      { id: '8(d)(i)', title: '8(d)(i)', max: 3, section: 'B', opt: 'Q8', topicId: 14, topic: 'Topic 14: Electric Fields & Capacitance', bloom: 'Apply', desc: 'Calculate time taken for camera flash capacitor to reach 95% charge' },
+      { id: '8(d)(ii)', title: '8(d)(ii)', max: 3, section: 'B', opt: 'Q8', topicId: 14, topic: 'Topic 14: Electric Fields & Capacitance', bloom: 'Apply', desc: 'Calculate maximum energy capacitor can deliver to flash circuit' },
+
+      // SECTION B - OPTION 2: Q9 Nuclear Physics & Decay (20m)
+      { id: '9(a)(i)', title: '9(a)(i)', max: 1, section: 'B', opt: 'Q9', topicId: 20, topic: 'Topic 20: Nuclear Physics', bloom: 'Apply', desc: 'Conservation of linear momentum equation for stationary alpha decay' },
+      { id: '9(a)(ii)', title: '9(a)(ii)', max: 3, section: 'B', opt: 'Q9', topicId: 20, topic: 'Topic 20: Nuclear Physics', bloom: 'Analyse', desc: 'Show ratio of Ek(alpha) to Ek(daughter) equals (A/4 - 1)' },
+      { id: '9(b)(i)', title: '9(b)(i)', max: 3, section: 'B', opt: 'Q9', topicId: 20, topic: 'Topic 20: Nuclear Physics', bloom: 'Apply', desc: 'Calculate energy released in alpha decay of Bi-212 to 2 decimal places' },
+      { id: '9(b)(ii)', title: '9(b)(ii)', max: 2, section: 'B', opt: 'Q9', topicId: 20, topic: 'Topic 20: Nuclear Physics', bloom: 'Analyse', desc: 'Show energy of alpha particle is 6.42 MeV using (a)(ii) ratio' },
+      { id: '9(c)(i)', title: '9(c)(i)', max: 1, section: 'B', opt: 'Q9', topicId: 20, topic: 'Topic 20: Nuclear Physics', bloom: 'Analyse', desc: 'Suggest explanation why alpha particle has 6.10 MeV instead of 6.42 MeV' },
+      { id: '9(c)(ii)', title: '9(c)(ii)', max: 3, section: 'B', opt: 'Q9', topicId: 20, topic: 'Topic 20: Nuclear Physics', bloom: 'Evaluate', desc: 'Explain why thallium nucleus and alpha do not move off in opposite directions' },
+      { id: '9(d)(i)1', title: '9(d)(i)1', max: 1, section: 'B', opt: 'Q9', topicId: 20, topic: 'Topic 20: Nuclear Physics', bloom: 'Recall', desc: 'Define half-life of a radioactive nuclide' },
+      { id: '9(d)(i)2', title: '9(d)(i)2', max: 1, section: 'B', opt: 'Q9', topicId: 20, topic: 'Topic 20: Nuclear Physics', bloom: 'Recall', desc: 'Define decay constant' },
+      { id: '9(d)(ii)', title: '9(d)(ii)', max: 2, section: 'B', opt: 'Q9', topicId: 20, topic: 'Topic 20: Nuclear Physics', bloom: 'Analyse', desc: 'Show decay constant λ and half-life t_1/2 are related by λ = ln(2) / t_1/2' },
+      { id: '9(d)(iii)', title: '9(d)(iii)', max: 1, section: 'B', opt: 'Q9', topicId: 20, topic: 'Topic 20: Nuclear Physics', bloom: 'Apply', desc: 'Calculate the half-life of bismuth-212 from its decay constant' },
+      { id: '9(d)(iv)', title: '9(d)(iv)', max: 2, section: 'B', opt: 'Q9', topicId: 20, topic: 'Topic 20: Nuclear Physics', bloom: 'Evaluate', desc: 'Suggest explanation why thallium nuclei count is much less than 3/4 N' }
+    ];
+
+    // SEAB Command Word Frameworks
+    const SKILL_DEFINITIONS = {
+      'Recall': {
+        label: 'Recall / Define',
+        commandWords: 'Define, State, List',
+        focus: 'Verbatim definitions, physical laws, and exact terminology without explanation',
+        examExpectation: 'State exact syllabus wording: zero margin for omitted keywords (e.g. "per unit positive charge", "undecayed nuclei").'
+      },
+      'Understand': {
+        label: 'Interpret / Describe',
+        commandWords: 'Describe, Interpret, Explain (Qualitative)',
+        focus: 'Physical mechanisms, cause-and-effect sequences, and qualitative phenomena',
+        examExpectation: 'Describe what happens and interpret why using established physical principles (e.g. why longitudinal oscillations cannot be polarised).'
+      },
+      'Apply': {
+        label: 'Calculate / Apply',
+        commandWords: 'Calculate, Determine (Direct), Apply, Sketch',
+        focus: 'Quantitative calculations, formula execution, standard circuit models, and scaled graphs',
+        examExpectation: 'Execute mathematical routines with correct SI unit conversions, appropriate significant figures (2 or 3 s.f.), and clear substitution steps.'
+      },
+      'Analyse': {
+        label: 'Derive / Relate / Analyze',
+        commandWords: 'Derive, Show that, Deduce, Relate, Analyze (Graphical)',
+        focus: 'Multi-step algebraic proofs, functional relationships, gradient analysis, and decay kinematics',
+        examExpectation: 'Synthesize multiple governing equations (e.g. equating electric force to potential gradient, linearising exponential capacitor charging, deriving alpha-daughter kinetic energy ratios).'
+      },
+      'Evaluate': {
+        label: 'Justify / Assess / Evaluate',
+        commandWords: 'Evaluate, Discuss, Justify, Assess',
+        focus: 'Critical assessment of scientific observations, non-collinear emission, and decay chain kinetics',
+        examExpectation: 'Weigh experimental evidence against competing hypotheses (e.g. gamma emission accounting for missing kinetic energy and non-collinear momentum conservation).'
+      }
+    };
+
+    // State Variables
+    let activeSectionBChoice = 'Q8'; // 'Q8' or 'Q9'
+    let studentScores = {};
+    let studentErrors = {};
+    let activeTargetGrade = 'A';
+    let cohortSubmissions = [];
+    let authenticatedTeacherPin = null;
+
+    let radarChartInstance = null;
+    let barChartInstance = null;
+
+    function getActiveQuestionsList() {
+      return ALL_QUESTIONS.filter(q => q.section === 'A' || q.opt === activeSectionBChoice);
+    }
+
+    function sanitizeScores(rawScores) {
+      if (!rawScores || typeof rawScores !== 'object') return {};
+      const clean = {};
+      ALL_QUESTIONS.forEach(q => {
+        if (rawScores[q.id] !== undefined && rawScores[q.id] !== null && rawScores[q.id] !== '') {
+          const num = Number(rawScores[q.id]);
+          if (!isNaN(num)) {
+            clean[q.id] = Math.max(0, Math.min(q.max, Math.round(num)));
+          }
+        }
+      });
+      return clean;
+    }
+
+    window.onload = function() {
+      loadSavedSession();
+      renderQuestionInputCards();
+      updateAllCalculations();
+      initAnalyticsCharts();
+    };
+
+    function setSectionBChoice(choice) {
+      activeSectionBChoice = choice;
+      localStorage.setItem('jpjc_p3_secb_choice', choice);
+
+      // Update Section B header label
+      const badge = document.getElementById('header-section-b-choice');
+      if (badge) badge.textContent = `${choice} Selected`;
+
+      // Update button styles
+      const btnQ8 = document.getElementById('sec-b-btn-Q8');
+      const btnQ9 = document.getElementById('sec-b-btn-Q9');
+      if (btnQ8 && btnQ9) {
+        if (choice === 'Q8') {
+          btnQ8.className = "px-3.5 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-blue-600 text-white shadow-sm";
+          btnQ9.className = "px-3.5 py-2 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 bg-transparent text-slate-300 hover:text-white";
+        } else {
+          btnQ9.className = "px-3.5 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-blue-600 text-white shadow-sm";
+          btnQ8.className = "px-3.5 py-2 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 bg-transparent text-slate-300 hover:text-white";
+        }
+      }
+
+      renderQuestionInputCards();
+      updateAllCalculations();
+      updateAnalyticsCharts();
+      showToast(`Switched Section B to ${choice === 'Q8' ? 'Question 8 (Electric Fields)' : 'Question 9 (Nuclear Physics)'}. Exam remains out of 75 marks.`, 'info');
+    }
+
+    function loadSavedSession() {
+      try {
+        const savedChoice = localStorage.getItem('jpjc_p3_secb_choice');
+        if (savedChoice === 'Q8' || savedChoice === 'Q9') activeSectionBChoice = savedChoice;
+
+        const savedScores = localStorage.getItem('jpjc_p3_student_scores');
+        const savedErrors = localStorage.getItem('jpjc_p3_student_errors');
+        const savedParticulars = localStorage.getItem('jpjc_p3_student_particulars');
+
+        if (savedScores) studentScores = sanitizeScores(JSON.parse(savedScores));
+        if (savedErrors) studentErrors = JSON.parse(savedErrors);
+        if (savedParticulars) {
+          const p = JSON.parse(savedParticulars);
+          if (p.name) document.getElementById('student-name').value = p.name;
+          if (p.class) document.getElementById('student-class').value = p.class;
+          if (p.tutor) document.getElementById('student-tutor').value = p.tutor;
+        }
+
+        const badge = document.getElementById('header-section-b-choice');
+        if (badge) badge.textContent = `${activeSectionBChoice} Selected`;
+
+        const btnQ8 = document.getElementById('sec-b-btn-Q8');
+        const btnQ9 = document.getElementById('sec-b-btn-Q9');
+        if (btnQ8 && btnQ9) {
+          if (activeSectionBChoice === 'Q8') {
+            btnQ8.className = "px-3.5 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-blue-600 text-white shadow-sm";
+            btnQ9.className = "px-3.5 py-2 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 bg-transparent text-slate-300 hover:text-white";
+          } else {
+            btnQ9.className = "px-3.5 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-blue-600 text-white shadow-sm";
+            btnQ8.className = "px-3.5 py-2 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 bg-transparent text-slate-300 hover:text-white";
+          }
+        }
+      } catch (err) {
+        console.warn("Session restore error:", err);
+      }
+    }
+
+    function saveStudentParticulars() {
+      const data = {
+        name: document.getElementById('student-name').value.trim(),
+        class: document.getElementById('student-class').value.trim(),
+        tutor: document.getElementById('student-tutor').value
+      };
+      localStorage.setItem('jpjc_p3_student_particulars', JSON.stringify(data));
+    }
+
+    function renderQuestionInputCards() {
+      const container = document.getElementById('question-cards-container');
+      if (!container) return;
+
+      const activePageGroups = [
+        ...BOOKLET_PAGE_GROUPS_SEC_A,
+        ...(activeSectionBChoice === 'Q8' ? BOOKLET_PAGE_GROUPS_Q8 : BOOKLET_PAGE_GROUPS_Q9)
+      ];
+
+      let html = '';
+      activePageGroups.forEach((group, index) => {
+        const isAlternate = (index % 2 === 1);
+        const groupBg = isAlternate ? 'bg-blue-50/45 border-blue-200/80' : 'bg-white border-slate-200';
+        const groupBadgeColor = isAlternate ? 'bg-blue-600 text-white' : 'bg-slate-800 text-white';
+
+        let pageSubtotalEarned = 0;
+        let pageSubtotalMax = 0;
+
+        const groupQuestions = ALL_QUESTIONS.filter(q => group.qns.includes(q.id));
+        groupQuestions.forEach(q => {
+          pageSubtotalMax += q.max;
+          pageSubtotalEarned += (studentScores[q.id] !== undefined ? studentScores[q.id] : 0);
+        });
+
+        const sectionBadge = group.section === 'A' 
+          ? '<span class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-200 text-slate-700">Section A (Compulsory)</span>'
+          : `<span class="text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-100 text-indigo-700">Section B Choice (${activeSectionBChoice})</span>`;
+
+        html += `
+          <div class="rounded-2xl border ${groupBg} p-5 shadow-sm space-y-4 transition">
+            <!-- Page Group Header -->
+            <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200/60 pb-3">
+              <div class="flex items-center gap-2.5">
+                <span class="px-3 py-1 rounded-lg text-xs font-black font-mono tracking-tight ${groupBadgeColor}">
+                  [ ${group.qns.join(', ')} ]
+                </span>
+                <span class="text-xs font-bold text-slate-700">Exam Booklet Page ${group.page}</span>
+                ${sectionBadge}
+              </div>
+              <div class="text-xs font-mono font-bold text-slate-600 flex items-center gap-1.5">
+                <span>Page Subtotal:</span>
+                <span id="page-subtotal-${group.page}" class="text-sm font-black text-blue-600">${pageSubtotalEarned}</span>
+                <span class="text-slate-400">/ ${pageSubtotalMax}m</span>
+              </div>
+            </div>
+
+            <!-- Questions Inside This Page -->
+            <div class="space-y-3.5">
+        `;
+
+        groupQuestions.forEach(q => {
+          const currentScore = studentScores[q.id] !== undefined ? studentScores[q.id] : '';
+          const currentErr = studentErrors[q.id] || '';
+
+          let markButtons = '';
+          for (let m = 0; m <= q.max; m++) {
+            const isSelected = (currentScore === m);
+            const btnClass = isSelected 
+              ? 'bg-blue-600 text-white font-black shadow-md ring-2 ring-blue-400 ring-offset-1 scale-105' 
+              : 'bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold';
+            markButtons += `
+              <button type="button" onclick="setQuestionMark('${q.id}', ${m})" class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg text-xs font-mono transition flex items-center justify-center ${btnClass}">
+                ${m}
+              </button>
+            `;
+          }
+
+          html += `
+            <div class="p-3 sm:p-4 rounded-xl bg-white border border-slate-200/90 flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-xs">
+              <div class="flex-1 min-w-0">
+                <div class="flex flex-wrap items-center gap-2 mb-1">
+                  <span class="text-xs font-extrabold font-mono text-slate-900 bg-slate-100 px-2 py-0.5 rounded border border-slate-300/60">${q.title}</span>
+                  <span class="text-[11px] font-semibold text-slate-500">${q.topic}</span>
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-50 text-purple-700 border border-purple-200">
+                    ${SKILL_DEFINITIONS[q.bloom] ? SKILL_DEFINITIONS[q.bloom].label : q.bloom}
+                  </span>
+                </div>
+                <p class="text-xs text-slate-600 truncate">${q.desc} <span class="font-bold text-slate-800">(${q.max}m)</span></p>
+              </div>
+
+              <div class="flex flex-wrap items-center gap-3">
+                <!-- Mark Selection Buttons -->
+                <div class="flex items-center gap-1">
+                  ${markButtons}
+                </div>
+
+                <!-- Error Cause Dropdown -->
+                <select onchange="setQuestionError('${q.id}', this.value)" class="text-xs px-2.5 py-1.5 rounded-lg border border-slate-300 bg-slate-50 focus:bg-white text-slate-700 outline-none">
+                  <option value="">Error Cause...</option>
+                  <option value="careless" ${currentErr === 'careless' ? 'selected' : ''}>Careless / Math</option>
+                  <option value="recall" ${currentErr === 'recall' ? 'selected' : ''}>Recall / Definition</option>
+                  <option value="concept" ${currentErr === 'concept' ? 'selected' : ''}>Concept / Principle</option>
+                  <option value="command" ${currentErr === 'command' ? 'selected' : ''}>Command Word / Keywords</option>
+                  <option value="time" ${currentErr === 'time' ? 'selected' : ''}>Time Pressure</option>
+                </select>
+              </div>
+            </div>
+          `;
+        });
+
+        html += `
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function setQuestionMark(qId, mark) {
+      studentScores[qId] = mark;
+      localStorage.setItem('jpjc_p3_student_scores', JSON.stringify(studentScores));
+      renderQuestionInputCards();
+      updateAllCalculations();
+      updateAnalyticsCharts();
+    }
+
+    function setQuestionError(qId, errorVal) {
+      if (errorVal) {
+        studentErrors[qId] = errorVal;
+      } else {
+        delete studentErrors[qId];
+      }
+      localStorage.setItem('jpjc_p3_student_errors', JSON.stringify(studentErrors));
+      updateAdvisoryContent();
+    }
+
+    function calculateTotalScore() {
+      let total = 0;
+      const activeList = getActiveQuestionsList();
+      activeList.forEach(q => {
+        if (studentScores[q.id] !== undefined) {
+          const val = Math.max(0, Math.min(q.max, Number(studentScores[q.id]) || 0));
+          total += val;
+        }
+      });
+      return total;
+    }
+
+    function getGradeFromScore(score) {
+      const pct = (score / 75) * 100;
+      if (pct >= 70.0) return 'A';
+      if (pct >= 60.0) return 'B';
+      if (pct >= 55.0) return 'C';
+      if (pct >= 50.0) return 'D';
+      if (pct >= 45.0) return 'E';
+      if (pct >= 40.0) return 'S';
+      return 'U';
+    }
+
+    function updateAllCalculations() {
+      const totalScore = calculateTotalScore();
+      const pct = (totalScore / 75) * 100;
+      const grade = getGradeFromScore(totalScore);
+
+      document.getElementById('header-score').textContent = totalScore;
+      document.getElementById('header-percentage').textContent = pct.toFixed(1) + '%';
+      
+      const gradeEl = document.getElementById('header-grade');
+      gradeEl.textContent = grade;
+      gradeEl.className = `text-xl sm:text-2xl font-black font-mono ${grade === 'A' ? 'text-emerald-600' : grade === 'B' || grade === 'C' ? 'text-blue-600' : grade === 'D' || grade === 'E' ? 'text-amber-600' : 'text-rose-600'}`;
+
+      const neededForA = Math.max(0, 53 - totalScore);
+      const label = document.getElementById('distinction-label');
+      if (label) {
+        label.textContent = neededForA === 0 ? "Distinction Standard Achieved (≥53m)" : `${neededForA} Marks to Distinction ('A')`;
+      }
+      const progressBar = document.getElementById('distinction-progress-bar');
+      if (progressBar) {
+        const progressWidth = Math.min(100, (totalScore / 53) * 100);
+        progressBar.style.width = progressWidth + '%';
+      }
+
+      updateAnalyticsTable();
+      updateAdvisoryContent();
+      renderTopicAlignmentCards();
+    }
+
+    function computeThinkingSkillsStats() {
+      const skills = {
+        'Recall': { total: 0, earned: 0, qns: [] },
+        'Understand': { total: 0, earned: 0, qns: [] },
+        'Apply': { total: 0, earned: 0, qns: [] },
+        'Analyse': { total: 0, earned: 0, qns: [] },
+        'Evaluate': { total: 0, earned: 0, qns: [] }
+      };
+
+      const activeList = getActiveQuestionsList();
+      activeList.forEach(q => {
+        if (skills[q.bloom]) {
+          skills[q.bloom].total += q.max;
+          const val = Math.max(0, Math.min(q.max, Number(studentScores[q.id]) || 0));
+          skills[q.bloom].earned += val;
+          skills[q.bloom].qns.push(q.id);
+        }
+      });
+
+      return skills;
+    }
+
+    function computeTopicStats() {
+      const topics = {};
+      const activeList = getActiveQuestionsList();
+      activeList.forEach(q => {
+        if (!topics[q.topic]) {
+          topics[q.topic] = { total: 0, earned: 0, qns: [] };
+        }
+        topics[q.topic].total += q.max;
+        const val = Math.max(0, Math.min(q.max, Number(studentScores[q.id]) || 0));
+        topics[q.topic].earned += val;
+        topics[q.topic].qns.push(q.id);
+      });
+      return topics;
+    }
+
+    function updateAnalyticsTable() {
+      const tbody = document.getElementById('analytics-table-body');
+      if (!tbody) return;
+
+      const skills = computeThinkingSkillsStats();
+      const topics = computeTopicStats();
+
+      let html = '';
+
+      Object.entries(skills).forEach(([skill, data]) => {
+        const pct = data.total > 0 ? (data.earned / data.total) * 100 : 0;
+        const badge = pct >= 70 ? 'bg-emerald-100 text-emerald-800' : pct >= 50 ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800';
+        const status = pct >= 70 ? 'Secure in this Paper' : pct >= 50 ? 'Consolidate' : 'Critical Focus';
+        const meta = SKILL_DEFINITIONS[skill] || { label: skill, commandWords: '', focus: '' };
+
+        html += `
+          <tr class="hover:bg-slate-50 transition">
+            <td class="py-3 px-3.5 text-slate-800">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="w-2.5 h-2.5 rounded-full bg-purple-600"></span>
+                <span class="font-bold text-slate-900 text-xs">${meta.label}</span>
+                <span class="text-[10px] font-mono px-1.5 py-0.2 rounded bg-purple-100 text-purple-800 font-bold">${data.total}m</span>
+              </div>
+              <div class="text-[11px] text-indigo-600 font-semibold pl-4.5">
+                <i class="fa-solid fa-terminal text-[9px]"></i> Command Words: <span class="font-mono">${meta.commandWords}</span>
+              </div>
+              <div class="text-[10px] text-slate-500 pl-4.5 mt-0.5">${meta.focus}</div>
+            </td>
+            <td class="py-3 px-3 text-slate-500 font-mono text-[11px] align-top pt-3">${data.qns.join(', ')}</td>
+            <td class="py-3 px-3 font-mono font-bold align-top pt-3 text-xs">${data.earned} / ${data.total}</td>
+            <td class="py-3 px-3 font-mono font-bold text-slate-700 align-top pt-3 text-xs">${pct.toFixed(0)}%</td>
+            <td class="py-3 px-3 align-top pt-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${badge}">${status}</span></td>
+          </tr>
+        `;
+      });
+
+      Object.entries(topics).forEach(([topic, data]) => {
+        const pct = data.total > 0 ? (data.earned / data.total) * 100 : 0;
+        const badge = pct >= 70 ? 'bg-emerald-100 text-emerald-800' : pct >= 50 ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800';
+        const status = pct >= 70 ? 'Secure in this Paper' : pct >= 50 ? 'Consolidate' : 'Critical Focus';
+
+        html += `
+          <tr class="hover:bg-slate-50 transition">
+            <td class="py-2.5 px-3 font-semibold text-slate-800 flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+              ${topic}
+            </td>
+            <td class="py-2.5 px-3 text-slate-500 font-mono text-[11px]">${data.qns.join(', ')}</td>
+            <td class="py-2.5 px-3 font-mono font-bold text-xs">${data.earned} / ${data.total}</td>
+            <td class="py-2.5 px-3 font-mono font-bold text-slate-700 text-xs">${pct.toFixed(0)}%</td>
+            <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${badge}">${status}</span></td>
+          </tr>
+        `;
+      });
+
+      tbody.innerHTML = html;
+    }
+
+    function initAnalyticsCharts() {
+      const radarCtx = document.getElementById('bloomRadarChart');
+      if (radarCtx && !radarChartInstance) {
+        radarChartInstance = new Chart(radarCtx, {
+          type: 'radar',
+          data: {
+            labels: [
+              ['Recall / Define'],
+              ['Interpret / Describe'],
+              ['Calculate / Apply'],
+              ['Derive / Relate / Analyze'],
+              ['Justify / Assess / Evaluate']
+            ],
+            datasets: [{
+              label: 'Your Mastery %',
+              data: [0, 0, 0, 0, 0],
+              backgroundColor: 'rgba(99, 102, 241, 0.25)',
+              borderColor: 'rgba(99, 102, 241, 1)',
+              pointBackgroundColor: 'rgba(79, 70, 229, 1)',
+              borderWidth: 2
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              r: {
+                min: 0,
+                max: 100,
+                ticks: { stepSize: 20, font: { size: 10 } },
+                pointLabels: {
+                  font: { size: 10, weight: 'bold' }
+                }
+              }
+            }
+          }
+        });
+      }
+
+      const barCtx = document.getElementById('topicBarChart');
+      if (barCtx && !barChartInstance) {
+        barChartInstance = new Chart(barCtx, {
+          type: 'bar',
+          data: {
+            labels: ['Kinematics', 'Dynamics', 'Forces', 'Waves', 'DC Circuits', 'EM Induction', 'Quantum Well', activeSectionBChoice === 'Q8' ? 'Electric Fields' : 'Nuclear Physics'],
+            datasets: [{
+              label: 'Mastery %',
+              data: [0, 0, 0, 0, 0, 0, 0, 0],
+              backgroundColor: 'rgba(59, 130, 246, 0.7)',
+              borderRadius: 6
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: { min: 0, max: 100, ticks: { stepSize: 25 } }
+            }
+          }
+        });
+      }
+
+      updateAnalyticsCharts();
+    }
+
+    function updateAnalyticsCharts() {
+      const skills = computeThinkingSkillsStats();
+      const skillPcts = [
+        skills['Recall'].total ? (skills['Recall'].earned / skills['Recall'].total) * 100 : 0,
+        skills['Understand'].total ? (skills['Understand'].earned / skills['Understand'].total) * 100 : 0,
+        skills['Apply'].total ? (skills['Apply'].earned / skills['Apply'].total) * 100 : 0,
+        skills['Analyse'].total ? (skills['Analyse'].earned / skills['Analyse'].total) * 100 : 0,
+        skills['Evaluate'].total ? (skills['Evaluate'].earned / skills['Evaluate'].total) * 100 : 0
+      ];
+
+      if (radarChartInstance) {
+        radarChartInstance.data.datasets[0].data = skillPcts.map(p => Number(p.toFixed(1)));
+        radarChartInstance.update();
+      }
+
+      const topics = computeTopicStats();
+      const topicKeys = [
+        'Topic 2: Kinematics',
+        'Topic 3: Dynamics & Momentum',
+        'Topic 4: Forces & Equilibrium',
+        'Topic 12: Wave Motion',
+        'Topic 15: D.C. Circuits',
+        'Topic 17: Electromagnetic Induction',
+        'Topic 19: Quantum Physics',
+        activeSectionBChoice === 'Q8' ? 'Topic 14: Electric Fields & Capacitance' : 'Topic 20: Nuclear Physics'
+      ];
+
+      const topicLabels = [
+        'Kinematics', 'Dynamics', 'Forces', 'Waves', 'DC Circuits', 'EM Induction', 'Quantum Well',
+        activeSectionBChoice === 'Q8' ? 'Electric Fields' : 'Nuclear Physics'
+      ];
+
+      const topicPcts = topicKeys.map(k => {
+        const t = topics[k];
+        return t && t.total ? (t.earned / t.total) * 100 : 0;
+      });
+
+      if (barChartInstance) {
+        barChartInstance.data.labels = topicLabels;
+        barChartInstance.data.datasets[0].data = topicPcts.map(p => Number(p.toFixed(1)));
+        barChartInstance.update();
+      }
+    }
+
+    function setTargetGrade(target) {
+      activeTargetGrade = target;
+      ['A', 'B', 'C', 'D'].forEach(g => {
+        const btn = document.getElementById(`target-btn-${g}`);
+        if (btn) {
+          btn.className = (g === target) 
+            ? 'px-2.5 py-1 rounded font-bold bg-blue-600 text-white' 
+            : 'px-2.5 py-1 rounded font-bold bg-slate-800 text-slate-300 hover:bg-slate-700';
+        }
+      });
+      updateAdvisoryContent();
+    }
+
+    function updateAdvisoryContent() {
+      const currentScore = calculateTotalScore();
+      const targetThresholds = { 'A': 53, 'B': 45, 'C': 42, 'D': 38 };
+      const targetScore = targetThresholds[activeTargetGrade];
+      const gap = Math.max(0, targetScore - currentScore);
+
+      const box = document.getElementById('recovery-recommendation-box');
+      if (box) {
+        if (gap === 0) {
+          box.innerHTML = `<div class="font-bold text-emerald-400">Target Grade '${activeTargetGrade}' Threshold Met in this Paper (${currentScore}/75). Note: While execution in this paper was secure, continue broad topical revision across varied question formats to prevent blind spots.</div>`;
+        } else {
+          const activeList = getActiveQuestionsList();
+          const droppedQuestions = activeList.filter(q => {
+            const earned = studentScores[q.id] || 0;
+            return (q.max - earned) > 0;
+          }).slice(0, 4);
+
+          const suggestions = droppedQuestions.map(q => `${q.title} (${q.desc})`).join(', ');
+
+          box.innerHTML = `
+            <div>
+              <span class="font-bold text-amber-300">Deficit to Grade '${activeTargetGrade}' (${targetScore}m):</span> 
+              You need <strong class="text-white">${gap} more marks</strong> to attain Grade ${activeTargetGrade}.
+            </div>
+            <div class="mt-2 text-xs text-slate-300">
+              <strong class="text-blue-300">Highest-Yield Recovery Pathway:</strong> Target dropped marks in: ${suggestions || 'all sub-parts'}. Consolidating definitions and algebraic accuracy in these questions will bridge the ${gap}-mark gap.
+            </div>
+          `;
+        }
+      }
+
+      // Root Cause Summary
+      const summaryContainer = document.getElementById('error-causes-summary');
+      if (summaryContainer) {
+        const counts = { careless: 0, recall: 0, concept: 0, command: 0, time: 0 };
+        Object.values(studentErrors).forEach(err => {
+          if (counts[err] !== undefined) counts[err]++;
+        });
+
+        summaryContainer.innerHTML = `
+          <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 text-center">
+            <span class="text-[10px] uppercase font-bold text-slate-500 block">Careless / Math</span>
+            <span class="text-lg font-black font-mono text-slate-900">${counts.careless}</span>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 text-center">
+            <span class="text-[10px] uppercase font-bold text-slate-500 block">Recall / Defs</span>
+            <span class="text-lg font-black font-mono text-amber-600">${counts.recall}</span>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 text-center">
+            <span class="text-[10px] uppercase font-bold text-slate-500 block">Concept Leak</span>
+            <span class="text-lg font-black font-mono text-rose-600">${counts.concept}</span>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 text-center">
+            <span class="text-[10px] uppercase font-bold text-slate-500 block">Keywords Missing</span>
+            <span class="text-lg font-black font-mono text-purple-600">${counts.command}</span>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 text-center">
+            <span class="text-[10px] uppercase font-bold text-slate-500 block">Time Deficit</span>
+            <span class="text-lg font-black font-mono text-blue-600">${counts.time}</span>
+          </div>
+        `;
+      }
+
+      renderThinkingSkillsCards();
+    }
+
+    function renderThinkingSkillsCards() {
+      const container = document.getElementById('bloom-feedback-cards');
+      if (!container) return;
+
+      const skills = computeThinkingSkillsStats();
+      const tips = {
+        'Recall': {
+          title: 'Recall / Define',
+          command: 'Command Words: Define, State, List',
+          icon: 'fa-brain text-amber-500',
+          advice: 'State definitions verbatim without omission: Lenz\'s law (direction of induced e.m.f. opposes the change producing it), |ψ|² (probability density of finding particle per unit volume), field of force, electric field strength (force per unit positive charge on stationary test charge), half-life, and decay constant.'
+        },
+        'Understand': {
+          title: 'Interpret / Describe',
+          command: 'Command Words: Describe, Interpret, Explain (Qualitative)',
+          icon: 'fa-book-open text-blue-500',
+          advice: 'Articulate complete physical cause-and-effect sequences: why sound is a longitudinal wave with oscillations parallel to energy propagation, preventing polarisation which restricts vibrations to a single plane perpendicular to wave propagation.'
+        },
+        'Apply': {
+          title: 'Calculate / Apply',
+          command: 'Command Words: Calculate, Apply, Determine, Sketch',
+          icon: 'fa-calculator text-emerald-500',
+          advice: 'Ensure high computational discipline: vertical kinematics displacement with same flight time t, impulse and momentum changes with vector sign convention, moment of forces about hinge A, phase difference Δφ = 2πf(Δx/v), internal resistance E = I(R + r), and quantum infinite well energy levels.'
+        },
+        'Analyse': {
+          title: 'Derive / Relate / Analyze',
+          command: 'Command Words: Derive, Show that, Deduce, Relate, Analyze',
+          icon: 'fa-magnifying-glass-chart text-purple-500',
+          advice: 'Master multi-step analytical deductions: resolving force components and perpendicular distances, converting excess pressure phase to molecular displacement, non-linear I-V characteristics of component C, sinusoidal flux linkage differentiation, and alpha decay kinetic energy ratio proof.'
+        },
+        'Evaluate': {
+          title: 'Justify / Assess / Evaluate',
+          command: 'Command Words: Evaluate, Discuss, Justify, Assess',
+          icon: 'fa-scale-balanced text-rose-500',
+          advice: 'Structure comparative scientific evaluations: explain the 6.10 MeV vs 6.42 MeV discrepancy by accounting for the emission of gamma photons when the daughter nucleus is left in an excited state, and evaluate subsequent decay chain kinetics.'
+        }
+      };
+
+      let html = '';
+      Object.entries(skills).forEach(([skill, data]) => {
+        const pct = data.total > 0 ? (data.earned / data.total) * 100 : 0;
+        const badge = pct >= 70 ? 'bg-emerald-100 text-emerald-800' : pct >= 50 ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800';
+        const label = pct >= 70 ? 'Secure in this Paper' : pct >= 50 ? 'Consolidate' : 'Priority Attention';
+        const info = tips[skill];
+
+        html += `
+          <div class="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col justify-between space-y-3">
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="font-bold text-slate-800 text-xs flex items-center gap-1.5">
+                  <i class="fa-solid ${info.icon}"></i> ${info.title} (${data.total}m)
+                </span>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${badge}">${label}</span>
+              </div>
+              <div class="text-[10px] font-semibold text-indigo-600 mb-2">${info.command}</div>
+              <div class="flex items-baseline gap-1.5 mb-2">
+                <span class="text-2xl font-black font-mono text-slate-900">${pct.toFixed(0)}%</span>
+                <span class="text-xs text-slate-500">(${data.earned}/${data.total} marks)</span>
+              </div>
+              <p class="text-xs text-slate-600 leading-relaxed">${info.advice}</p>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    let topicAdviceFilter = 'all';
+    function filterTopicAdvice(filterType) {
+      topicAdviceFilter = filterType;
+      ['all', 'critical', 'consolidate'].forEach(f => {
+        const btn = document.getElementById(`topic-filter-${f}`);
+        if (btn) {
+          btn.className = (f === filterType) 
+            ? 'px-3 py-1 rounded-lg font-bold bg-indigo-600 text-white' 
+            : 'px-3 py-1 rounded-lg font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200';
+        }
+      });
+      renderTopicAlignmentCards();
+    }
+
+    function renderTopicAlignmentCards() {
+      const container = document.getElementById('topic-alignment-cards');
+      if (!container) return;
+
+      const topicStats = computeTopicStats();
+      const topicAdviceData = [
+        {
+          id: 'Topic 2: Kinematics',
+          name: 'Topic 2: Kinematics (Q1)',
+          code: 'SEAB 9478 LO 2(a)-2(d)',
+          prescribedDrill: 'Vertical free fall: Object A dropped from rest s = ut + ½gt² gives flight time t = √(2(14)/9.81) = 1.69 s. For Object B starting at 3.6 m, displacement is -3.6 m: -3.6 = u(1.69) - ½(9.81)(1.69)². When released at angle θ, vertical velocity component is u cos θ, leading to smaller upward flight and shorter duration.',
+          trap: 'Forgetting that displacement is a vector: Object B ends up below release point, so displacement is negative!'
+        },
+        {
+          id: 'Topic 3: Dynamics & Momentum',
+          name: 'Topic 3: Dynamics & Momentum (Q2)',
+          code: 'SEAB 9478 LO 3(b)-3(h)',
+          prescribedDrill: 'Change in momentum Δp = m(v - u). Taking upward as positive: Δp = 0.25(+3.6 - (-5.2)) = +2.20 kg m s⁻¹ (upwards). Average net force = Δp / Δt = 2.20 / 0.18 = 12.2 N. Normal contact force from ground N = F_net + mg = 12.2 + 0.25(9.81) = 14.7 N. By Newton\'s 3rd Law, force on ground is 14.7 N downwards.',
+          trap: 'Confusing resultant net force with contact force on the ground (omitting weight mg).'
+        },
+        {
+          id: 'Topic 4: Forces & Equilibrium',
+          name: 'Topic 4: Forces & Equilibrium (Q3)',
+          code: 'SEAB 9478 LO 4(a)-4(d)',
+          prescribedDrill: 'Taking moments about hinge A: sum of clockwise moments = sum of counter-clockwise moments. Weight 65 N acts at midpoint 0.30 m with horizontal distance 0.30 cos(30°). Rope tension F acts at 0.60 m at angle 50° to bar: 65(0.30 cos 30°) = F(0.60 sin 50°). For hinge reaction R, equate horizontal and vertical force components: Rx = F cos(80°), Ry + F sin(80°) = 65.',
+          trap: 'Using the angle of the bar rather than the perpendicular component of tension: F_perp = F sin(50°).'
+        },
+        {
+          id: 'Topic 12: Wave Motion',
+          name: 'Topic 12: Wave Motion (Q4)',
+          code: 'SEAB 9478 LO 12(a)-12(f)',
+          prescribedDrill: 'Phase difference Δφ = (2π / λ) Δx ⇒ λ = 2π(Δx) / Δφ = 2π(0.300) / 3.50 = 0.5386 m. Wave speed v = fλ = 650 × 0.5386 = 350 m s⁻¹. For pressure vs displacement: compression (maximum pressure) occurs where air molecules converge, meaning displacement is zero and gradient is negative.',
+          trap: 'Assuming pressure and displacement are in phase; pressure excess corresponds to maximum spatial compression rate.'
+        },
+        {
+          id: 'Topic 15: D.C. Circuits',
+          name: 'Topic 15: D.C. Circuits (Q5)',
+          code: 'SEAB 9478 LO 15(a)-15(e)',
+          prescribedDrill: 'Potential divider with internal resistance: V = E - Ir. Current I = 4.0 / 48 = 0.0833 A. Lost volts = 4.5 - 4.0 = 0.5 V ⇒ r = 0.5 / 0.0833 = 6.0 Ω. Energy = I²Rt or V²t/R = (4.0)² × 120 / 48 = 40 J. For non-linear component C, minimum resistance is found from the steepest chord from the origin: R_min = (V/I)_min.',
+          trap: 'Confusing chord resistance R = V/I with dynamic resistance dV/dI.'
+        },
+        {
+          id: 'Topic 17: Electromagnetic Induction',
+          name: 'Topic 17: Electromagnetic Induction (Q6)',
+          code: 'SEAB 9478 LO 17(a)-17(e)',
+          prescribedDrill: 'Flux linkage Φ = BAN cos θ. At θ = 0, Φ = 3.0×10⁻² × (2.4×10⁻⁴) × 250 = 1.8×10⁻³ Wb. Rotating at 2 rev/s ⇒ period T = 0.50 s. From θ = 0 to 45° is 1/8 of a revolution ⇒ Δt = 0.50 / 8 = 0.0625 s. Average e.m.f. = |ΔΦ| / Δt = (1.8×10⁻³(1 - cos 45°)) / 0.0625 = 8.4×10⁻³ V.',
+          trap: 'Failing to convert coil area from cm² to m² (divide by 10⁴).'
+        },
+        {
+          id: 'Topic 19: Quantum Physics',
+          name: 'Topic 19: Quantum Physics (Q7)',
+          code: 'SEAB 9478 LO 19(f)-19(h)',
+          prescribedDrill: 'Infinite square well: energy levels En = n²h² / (8mL²). Energy to excite ground state (n=1) to first excited state (n=2): ΔE = (2² - 1²) h² / (8mL²) = 3h² / (8mL²). For probability, |ψ|² represents probability density; integrate |ψ|² dx over interval [L/3, L/2] for n=3 mode.',
+          trap: 'Using Bohr energy level formula (E ∝ -1/n²) instead of infinite potential well (E ∝ n²).'
+        },
+        {
+          id: 'Topic 14: Electric Fields & Capacitance',
+          name: 'Topic 14: Electric Fields & Capacitance (Q8)',
+          code: 'SEAB 9478 LO 14(a)-14(g)',
+          prescribedDrill: 'Electric field strength E = -dV/dx (negative gradient of potential graph). Inside conductor (x = 0 to 9.0 cm), charge resides on outer surface so E = 0, meaning V is constant. For capacitor charging: Q(t) = Q₀(1 - e^(-t/RC)) ⇒ 0.95 = 1 - e^(-t/RC) ⇒ t = -RC ln(0.05) where R = 45 Ω, C = 120 μF.',
+          trap: 'Forgetting to include the negative sign when relating electric field direction to potential gradient E = -dV/dx.'
+        },
+        {
+          id: 'Topic 20: Nuclear Physics',
+          name: 'Topic 20: Nuclear Physics (Q9)',
+          code: 'SEAB 9478 LO 20(a)-20(e)',
+          prescribedDrill: 'Alpha decay momentum conservation: m_α V = m_d v ⇒ v = (4 / (A - 4)) V. Kinetic energy ratio Ek(α)/Ek(d) = (½ m_α V²) / (½ m_d v²) = (A - 4)/4 = (¼A - 1). Mass defect Δm = m_parent - (m_daughter + m_alpha); multiply by 931.5 MeV/u. When alpha has 6.10 MeV instead of 6.42 MeV, remaining 0.32 MeV is emitted as a gamma photon.',
+          trap: 'Neglecting nuclear recoil or subtracting atomic electrons incorrectly.'
+        }
+      ];
+
+      let html = '';
+      topicAdviceData.forEach(t => {
+        // Skip Section B topics not currently selected
+        if (t.id === 'Topic 14: Electric Fields & Capacitance' && activeSectionBChoice !== 'Q8') return;
+        if (t.id === 'Topic 20: Nuclear Physics' && activeSectionBChoice !== 'Q9') return;
+
+        const stat = topicStats[t.id] || { total: 0, earned: 0 };
+        const pct = stat.total > 0 ? (stat.earned / stat.total) * 100 : 0;
+
+        if (topicAdviceFilter === 'critical' && pct >= 50) return;
+        if (topicAdviceFilter === 'consolidate' && (pct < 50 || pct >= 70)) return;
+
+        const badge = pct >= 70 ? 'bg-emerald-100 text-emerald-800' : pct >= 50 ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800';
+        const label = pct >= 70 ? 'Secure in this Paper (≥70%)' : pct >= 50 ? 'Consolidate (50-69%)' : 'Critical Focus (<50%)';
+
+        html += `
+          <div class="p-5 rounded-2xl border border-slate-200 bg-slate-50/50 space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-2.5">
+              <div>
+                <h4 class="font-bold text-slate-900 text-sm">${t.name}</h4>
+                <span class="text-[11px] font-mono text-slate-400">${t.code}</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="font-mono text-sm font-black text-slate-900">${stat.earned} / ${stat.total}m (${pct.toFixed(0)}%)</span>
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-bold ${badge}">${label}</span>
+              </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+              <div class="bg-white p-3 rounded-xl border border-slate-200">
+                <span class="font-bold text-indigo-700 flex items-center gap-1.5 mb-1">
+                  <i class="fa-solid fa-graduation-cap"></i> Core Learning Objective & Derivation Drill
+                </span>
+                <p class="text-slate-600 leading-relaxed">${t.prescribedDrill}</p>
+              </div>
+              <div class="bg-white p-3 rounded-xl border border-slate-200">
+                <span class="font-bold text-rose-700 flex items-center gap-1.5 mb-1">
+                  <i class="fa-solid fa-triangle-exclamation"></i> Cambridge Examiner Trap Warning
+                </span>
+                <p class="text-slate-600 leading-relaxed">${t.trap}</p>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      if (!html) {
+        html = `<div class="p-8 text-center text-xs text-slate-400">No topics match the selected filter.</div>`;
+      }
+
+      container.innerHTML = html;
+    }
+
+    async function submitToTeacher() {
+      const name = document.getElementById('student-name').value.trim();
+      const sClass = document.getElementById('student-class').value.trim();
+      const tutor = document.getElementById('student-tutor').value;
+
+      if (!name) {
+        showToast("Please enter your Student Full Name before submitting.", "warning");
+        switchTab('tab-entry');
+        document.getElementById('student-name').focus();
+        return;
+      }
+      if (!sClass) {
+        showToast("Please enter your Class before submitting.", "warning");
+        switchTab('tab-entry');
+        document.getElementById('student-class').focus();
+        return;
+      }
+      if (!tutor) {
+        showToast("Please select your Physics Tutor from the dropdown.", "warning");
+        switchTab('tab-entry');
+        document.getElementById('student-tutor').focus();
+        return;
+      }
+
+      const totalScore = calculateTotalScore();
+      const pct = Number(((totalScore / 75) * 100).toFixed(1));
+      const grade = getGradeFromScore(totalScore);
+
+      const payload = {
+        id: 'p3_sub_' + new Date().getTime(),
+        paper: 'Paper 3 (9478/03)',
+        sectionBChoice: activeSectionBChoice,
+        studentName: name,
+        studentClass: sClass,
+        studentTutor: tutor,
+        totalScore: totalScore,
+        percentage: pct,
+        grade: grade,
+        submittedAt: new Date().toISOString(),
+        scores: studentScores,
+        errorReasons: studentErrors
+      };
+
+      const btn = document.getElementById('submit-btn');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Submitting...`;
+      btn.disabled = true;
+
+      try {
+        await fetch(GOOGLE_SHEET_WEBAPP_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        });
+
+        btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> Submitted Successfully!`;
+        btn.className = "px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-xs sm:text-sm transition flex items-center gap-2 shadow-md";
+        showToast("Paper 3 submitted to Google Sheet successfully!", "success");
+        
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+          btn.className = "px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-xs sm:text-sm transition flex items-center gap-2 shadow-md shadow-blue-600/20";
+          btn.disabled = false;
+        }, 3000);
+
+      } catch (err) {
+        console.error("Submission error:", err);
+        showToast("Network issue encountered. Please try again or download a backup.", "error");
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      }
+    }
+
+    function togglePinVisibility() {
+      const pinInput = document.getElementById('teacher-pin-input');
+      const eyeIcon = document.getElementById('pin-eye-icon');
+      if (pinInput.type === 'password') {
+        pinInput.type = 'text';
+        eyeIcon.className = 'fa-solid fa-eye-slash';
+      } else {
+        pinInput.type = 'password';
+        eyeIcon.className = 'fa-solid fa-eye';
+      }
+    }
+
+    async function unlockTeacherPortal() {
+      const pinInput = document.getElementById('teacher-pin-input');
+      const errorMsg = document.getElementById('pin-error-msg');
+      const unlockBtn = document.getElementById('unlock-btn');
+      const enteredPin = pinInput.value.trim();
+
+      if (!enteredPin) {
+        errorMsg.textContent = "Please enter the teacher password.";
+        errorMsg.classList.remove('hidden');
+        return;
+      }
+
+      unlockBtn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Verifying...`;
+      unlockBtn.disabled = true;
+      errorMsg.classList.add('hidden');
+
+      try {
+        const response = await fetch(`${GOOGLE_SHEET_WEBAPP_URL}?password=${encodeURIComponent(enteredPin)}`);
+        const result = await response.json();
+
+        if (result && result.error) {
+          errorMsg.textContent = result.error;
+          errorMsg.classList.remove('hidden');
+          unlockBtn.innerHTML = `<i class="fa-solid fa-key"></i> Unlock Portal`;
+          unlockBtn.disabled = false;
+          return;
+        }
+
+        authenticatedTeacherPin = enteredPin;
+        cohortSubmissions = Array.isArray(result) ? result : [];
+
+        document.getElementById('teacher-gate-card').classList.add('hidden');
+        document.getElementById('teacher-dashboard').classList.remove('hidden');
+        document.getElementById('teacher-tab-lock-icon').className = 'fa-solid fa-lock-open text-emerald-500';
+
+        renderCohortTable();
+        updateCohortMetrics();
+
+      } catch (err) {
+        console.error("Auth fetch error:", err);
+        errorMsg.textContent = "Unable to connect to Google Sheet. Check internet access or password.";
+        errorMsg.classList.remove('hidden');
+      } finally {
+        unlockBtn.innerHTML = `<i class="fa-solid fa-key"></i> Unlock Portal`;
+        unlockBtn.disabled = false;
+      }
+    }
+
+    async function loadCohortFromGoogleSheet(isManual = false) {
+      if (!authenticatedTeacherPin) return;
+
+      const refreshIcon = document.getElementById('refresh-icon');
+      if (refreshIcon) refreshIcon.classList.add('animate-spin');
+
+      try {
+        const response = await fetch(`${GOOGLE_SHEET_WEBAPP_URL}?password=${encodeURIComponent(authenticatedTeacherPin)}`);
+        const result = await response.json();
+        if (Array.isArray(result)) {
+          cohortSubmissions = result;
+          renderCohortTable();
+          updateCohortMetrics();
+          if (isManual) showToast("Cohort roster refreshed from Google Sheet.", "success");
+        }
+      } catch (err) {
+        console.error("Refresh error:", err);
+      } finally {
+        if (refreshIcon) refreshIcon.classList.remove('animate-spin');
+      }
+    }
+
+    function lockTeacherPortal() {
+      authenticatedTeacherPin = null;
+      cohortSubmissions = [];
+      document.getElementById('teacher-pin-input').value = '';
+      document.getElementById('teacher-gate-card').classList.remove('hidden');
+      document.getElementById('teacher-dashboard').classList.add('hidden');
+      document.getElementById('teacher-tab-lock-icon').className = 'fa-solid fa-lock text-amber-500';
+    }
+
+    function updateCohortMetrics() {
+      const total = cohortSubmissions.length;
+      document.getElementById('cohort-badge').textContent = total;
+      document.getElementById('metric-total-subs').textContent = total;
+
+      if (total === 0) {
+        document.getElementById('metric-mean-score').textContent = '0.0';
+        document.getElementById('metric-distinction-rate').textContent = '0.0%';
+        document.getElementById('metric-pass-rate').textContent = '0.0%';
+        return;
+      }
+
+      let sumScore = 0;
+      let distinctions = 0;
+      let passes = 0;
+
+      cohortSubmissions.forEach(s => {
+        const score = Number(s.totalScore) || 0;
+        sumScore += score;
+        if (score >= 53) distinctions++;
+        if (score >= 34) passes++;
+      });
+
+      const mean = (sumScore / total).toFixed(1);
+      const distRate = ((distinctions / total) * 100).toFixed(1);
+      const passRate = ((passes / total) * 100).toFixed(1);
+
+      document.getElementById('metric-mean-score').textContent = mean;
+      document.getElementById('metric-distinction-rate').textContent = distRate + '%';
+      document.getElementById('metric-pass-rate').textContent = passRate + '%';
+    }
+
+    function renderCohortTable() {
+      const tbody = document.getElementById('cohort-table-body');
+      if (!tbody) return;
+
+      const tutorFilter = document.getElementById('teacher-tutor-filter').value;
+      const search = (document.getElementById('roster-search').value || '').toLowerCase().trim();
+
+      const filtered = cohortSubmissions.filter(s => {
+        const matchTutor = (tutorFilter === 'ALL' || s.studentTutor === tutorFilter);
+        const matchSearch = (!search || (s.studentName && s.studentName.toLowerCase().includes(search)) || (s.studentClass && s.studentClass.toLowerCase().includes(search)));
+        return matchTutor && matchSearch;
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="9" class="text-center py-6 text-slate-400 text-xs">No matching student submissions found.</td></tr>`;
+        return;
+      }
+
+      let html = '';
+      filtered.forEach((s, idx) => {
+        const gradeBadge = s.grade === 'A' ? 'bg-emerald-100 text-emerald-800' : s.grade === 'B' || s.grade === 'C' ? 'bg-blue-100 text-blue-800' : 'bg-slate-100 text-slate-700';
+        const formattedDate = s.submittedAt ? new Date(s.submittedAt).toLocaleDateString('en-SG', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : '-';
+        const secBChoice = s.sectionBChoice || 'Q8';
+
+        html += `
+          <tr class="hover:bg-slate-50 transition">
+            <td class="py-3 px-3.5 font-bold text-slate-900">${s.studentName || 'Anonymous'}</td>
+            <td class="py-3 px-3.5 font-mono text-slate-600">${s.studentClass || '-'}</td>
+            <td class="py-3 px-3.5 text-slate-600">${s.studentTutor || '-'}</td>
+            <td class="py-3 px-3.5 text-center font-mono font-bold text-slate-900">${s.totalScore}</td>
+            <td class="py-3 px-3.5 text-center font-mono text-slate-700">${s.percentage}%</td>
+            <td class="py-3 px-3.5 text-center"><span class="px-2 py-0.5 rounded-full text-[10px] font-black ${gradeBadge}">${s.grade}</span></td>
+            <td class="py-3 px-3.5 text-center font-mono font-bold text-indigo-600">${secBChoice}</td>
+            <td class="py-3 px-3.5 text-[11px] text-slate-400 font-mono">${formattedDate}</td>
+            <td class="py-3 px-3.5 text-right">
+              <button type="button" onclick="inspectStudentPaper('${s.id || idx}')" class="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 font-semibold text-[11px] transition">
+                Inspect
+              </button>
+            </td>
+          </tr>
+        `;
+      });
+
+      tbody.innerHTML = html;
+    }
+
+    let currentInspectedSub = null;
+    function inspectStudentPaper(subId) {
+      const student = cohortSubmissions.find((s, idx) => s.id === subId || String(idx) === String(subId));
+      if (!student) return;
+      currentInspectedSub = student;
+
+      document.getElementById('inspect-modal-title').textContent = student.studentName || 'Anonymous Student';
+      document.getElementById('inspect-modal-subtitle').textContent = `Submitted: ${student.submittedAt ? new Date(student.submittedAt).toLocaleString('en-SG') : 'Unknown'}`;
+      document.getElementById('inspect-class').textContent = student.studentClass || '-';
+      document.getElementById('inspect-tutor').textContent = student.studentTutor || '-';
+      document.getElementById('inspect-score').textContent = `${student.totalScore} / 75 (${student.percentage}%)`;
+      document.getElementById('inspect-grade').textContent = student.grade || 'U';
+
+      const secBChoice = student.sectionBChoice || 'Q8';
+      const inspectList = ALL_QUESTIONS.filter(q => q.section === 'A' || q.opt === secBChoice);
+
+      const grid = document.getElementById('inspect-breakdown-grid');
+      let gridHtml = '';
+      inspectList.forEach(q => {
+        const raw = (student.scores && student.scores[q.id] !== undefined) ? student.scores[q.id] : 0;
+        const score = Math.min(q.max, Math.max(0, Number(raw) || 0));
+        const err = (student.errorReasons && student.errorReasons[q.id]) ? `(${student.errorReasons[q.id]})` : '';
+        const badgeColor = score === q.max ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : score > 0 ? 'bg-blue-50 text-blue-700 border-blue-200' : 'bg-rose-50 text-rose-700 border-rose-200';
+        gridHtml += `
+          <div class="p-2 rounded-lg border text-[11px] flex items-center justify-between ${badgeColor}">
+            <span class="font-mono font-bold">${q.title}</span>
+            <span class="font-mono">${score}/${q.max}m <span class="text-[9px] opacity-75">${err}</span></span>
+          </div>
+        `;
+      });
+      grid.innerHTML = gridHtml;
+
+      const loadBtn = document.getElementById('inspect-load-btn');
+      loadBtn.onclick = function() {
+        loadStudentIntoWorkspace(currentInspectedSub);
+        closeInspectModal();
+      };
+
+      document.getElementById('inspect-modal').classList.remove('hidden');
+    }
+
+    function closeInspectModal() {
+      document.getElementById('inspect-modal').classList.add('hidden');
+    }
+
+    function loadStudentIntoWorkspace(student) {
+      if (!student) return;
+      document.getElementById('student-name').value = student.studentName || '';
+      document.getElementById('student-class').value = student.studentClass || '';
+      document.getElementById('student-tutor').value = student.studentTutor || '';
+      
+      if (student.sectionBChoice === 'Q8' || student.sectionBChoice === 'Q9') {
+        setSectionBChoice(student.sectionBChoice);
+      }
+
+      studentScores = sanitizeScores(student.scores || {});
+      studentErrors = student.errorReasons || {};
+
+      saveStudentParticulars();
+      renderQuestionInputCards();
+      updateAllCalculations();
+      updateAnalyticsCharts();
+      switchTab('tab-entry');
+      showToast(`Loaded marks for ${student.studentName || 'Student'} into workspace.`, 'success');
+    }
+
+    function exportCohortCSV() {
+      if (cohortSubmissions.length === 0) {
+        showToast("No submissions available to export.", "warning");
+        return;
+      }
+
+      let csv = "Student Name,Class,Tutor,Total Score,Percentage,Grade,Section B Choice,Submitted At\n";
+      cohortSubmissions.forEach(s => {
+        csv += `"${s.studentName || ''}","${s.studentClass || ''}","${s.studentTutor || ''}",${s.totalScore},${s.percentage},"${s.grade}","${s.sectionBChoice || 'Q8'}","${s.submittedAt || ''}"\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `JPJC_2026_Physics_P3_Cohort_${new Date().toISOString().slice(0,10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('border-blue-600', 'text-blue-600');
+        btn.classList.add('border-transparent', 'text-slate-500');
+      });
+
+      const target = document.getElementById(tabId);
+      if (target) target.classList.remove('hidden');
+
+      const activeBtn = document.getElementById(`tab-btn-${tabId.replace('tab-', '')}`);
+      if (activeBtn) {
+        activeBtn.classList.remove('border-transparent', 'text-slate-500');
+        activeBtn.classList.add('border-blue-600', 'text-blue-600');
+      }
+
+      if (tabId === 'tab-analytics') {
+        setTimeout(updateAnalyticsCharts, 50);
+      }
+    }
+
+    function generateReportHtml() {
+      const name = document.getElementById('student-name').value.trim() || 'Student';
+      const sClass = document.getElementById('student-class').value.trim() || '-';
+      const tutor = document.getElementById('student-tutor').value || '-';
+      const score = calculateTotalScore();
+      const grade = getGradeFromScore(score);
+      const pct = ((score / 75) * 100).toFixed(1);
+      const formattedDate = new Date().toLocaleDateString('en-SG', { day: '2-digit', month: 'long', year: 'numeric' });
+
+      const thinkingSkills = computeThinkingSkillsStats();
+      let thinkingRows = '';
+      Object.entries(thinkingSkills).forEach(([sk, stat]) => {
+        const p = stat.total > 0 ? (stat.earned / stat.total) * 100 : 0;
+        const meta = SKILL_DEFINITIONS[sk] || { label: sk, commandWords: '' };
+        const statusClass = p >= 70 ? 'text-emerald-700 font-bold' : p >= 50 ? 'text-amber-700 font-bold' : 'text-rose-700 font-bold';
+        thinkingRows += `
+          <tr class="border-b border-slate-200">
+            <td class="p-2 text-xs">
+              <div class="font-bold text-slate-900">${meta.label}</div>
+              <div class="text-[10px] text-slate-500">Command Words: ${meta.commandWords}</div>
+            </td>
+            <td class="p-2 font-mono text-[10px] text-slate-600">${stat.qns.join(', ')}</td>
+            <td class="p-2 text-center font-mono font-bold text-xs">${stat.earned} / ${stat.total}</td>
+            <td class="p-2 text-center font-mono font-bold text-xs">${p.toFixed(0)}%</td>
+            <td class="p-2 text-center text-[11px] ${statusClass}">${p >= 70 ? 'Secure in this Paper' : p >= 50 ? 'Consolidate' : 'Priority Attention'}</td>
+          </tr>
+        `;
+      });
+
+      const topics = computeTopicStats();
+      let topicRows = '';
+      Object.entries(topics).forEach(([top, stat]) => {
+        const p = stat.total > 0 ? (stat.earned / stat.total) * 100 : 0;
+        const statusClass = p >= 70 ? 'text-emerald-700 font-bold' : p >= 50 ? 'text-amber-700 font-bold' : 'text-rose-700 font-bold';
+        const advice = p >= 70 
+          ? 'Secure in this question context: maintain precision and test across varied question permutations.' 
+          : p >= 50 
+          ? 'Consolidate: review formula definitions and verify algebraic steps.' 
+          : 'Priority Attention: revisit governing concepts, core laws, and fundamental derivations.';
+        topicRows += `
+          <tr class="border-b border-slate-200">
+            <td class="p-2 font-semibold text-xs text-slate-900">${top}</td>
+            <td class="p-2 text-center font-mono font-bold text-xs">${stat.earned} / ${stat.total}</td>
+            <td class="p-2 text-center font-mono font-bold text-xs ${statusClass}">${p.toFixed(0)}%</td>
+            <td class="p-2 text-[11px] text-slate-600 leading-snug">${advice}</td>
+          </tr>
+        `;
+      });
+
+      return `
+        <!-- Report Header -->
+        <div class="border-b-2 border-slate-900 pb-4 flex justify-between items-start">
+          <div>
+            <span class="text-[10px] uppercase font-extrabold tracking-wider text-slate-600 block">Jurong Pioneer Junior College</span>
+            <h1 class="text-base sm:text-lg font-black text-slate-900">2026 JC2 H2 Physics Paper 3 (9478/03) Diagnostic Report</h1>
+          </div>
+          <div class="text-right">
+            <span class="text-xs font-mono text-slate-500 block">${formattedDate}</span>
+            <span class="text-xs font-bold text-blue-600 block">SEAB Syllabus 9478 &bull; Section B: ${activeSectionBChoice}</span>
+          </div>
+        </div>
+
+        <!-- Student Profile Box -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+          <div><span class="text-slate-400 block text-[10px] uppercase font-bold">Student Name</span><strong class="text-slate-900 text-xs">${name}</strong></div>
+          <div><span class="text-slate-400 block text-[10px] uppercase font-bold">Class</span><strong class="text-slate-900 text-xs font-mono">${sClass}</strong></div>
+          <div><span class="text-slate-400 block text-[10px] uppercase font-bold">Physics Tutor</span><strong class="text-slate-900 text-xs">${tutor}</strong></div>
+          <div><span class="text-slate-400 block text-[10px] uppercase font-bold">Overall Result</span><strong class="text-blue-600 text-xs font-mono font-black">${score} / 75 (${pct}%) — Grade ${grade}</strong></div>
+        </div>
+
+        <!-- Section 1: Thinking Skills Breakdown -->
+        <div class="space-y-2">
+          <h4 class="text-xs font-black uppercase tracking-wider text-slate-900 flex items-center gap-1.5">
+            <i class="fa-solid fa-brain text-purple-600"></i> 1. Physics Thinking & Question Skills Breakdown
+          </h4>
+          <div class="border border-slate-200 rounded-lg overflow-hidden">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-100 text-slate-600 font-bold border-b border-slate-200">
+                <tr>
+                  <th class="p-2">Thinking Skill Level</th>
+                  <th class="p-2">Sub-Parts Included</th>
+                  <th class="p-2 text-center">Score / Max</th>
+                  <th class="p-2 text-center">Mastery %</th>
+                  <th class="p-2 text-center">Status</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                ${thinkingRows}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Section 2: Syllabus Topic Alignment -->
+        <div class="space-y-2">
+          <h4 class="text-xs font-black uppercase tracking-wider text-slate-900 flex items-center gap-1.5">
+            <i class="fa-solid fa-bullseye text-indigo-600"></i> 2. Syllabus Topic Alignment & Diagnostic Actions
+          </h4>
+          <div class="border border-slate-200 rounded-lg overflow-hidden">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-100 text-slate-600 font-bold border-b border-slate-200">
+                <tr>
+                  <th class="p-2">Topic</th>
+                  <th class="p-2 text-center">Score</th>
+                  <th class="p-2 text-center">Mastery</th>
+                  <th class="p-2">Remedial Advisory Note</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                ${topicRows}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="pt-2 border-t border-slate-200 text-[10px] text-slate-500 text-center">
+          JPJC Department of Physics &bull; 2026 JC2 Preliminary Examination Paper 3
+        </div>
+      `;
+    }
+
+    function triggerPrint() {
+      const reportHtml = generateReportHtml();
+      
+      const modalCanvas = document.getElementById('modal-report-canvas');
+      if (modalCanvas) modalCanvas.innerHTML = reportHtml;
+
+      const printContainer = document.getElementById('print-report-container');
+      if (printContainer) printContainer.innerHTML = reportHtml;
+
+      const modal = document.getElementById('print-modal');
+      if (modal) modal.classList.remove('hidden');
+
+      showToast("Diagnostic report prepared! You can review, print, or open in a new tab.", "info");
+    }
+
+    function closePrintModal() {
+      const modal = document.getElementById('print-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function triggerBrowserPrint() {
+      try {
+        window.print();
+      } catch (err) {
+        showToast("Embedded print blocked by browser. Opening in new window...", "warning");
+        openPrintInNewWindow();
+      }
+    }
+
+    function openPrintInNewWindow() {
+      const reportHtml = generateReportHtml();
+      const printWindow = window.open('', '_blank', 'width=900,height=1000');
+      
+      if (printWindow) {
+        printWindow.document.write(`
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>2026 JPJC H2 Physics Paper 3 Diagnostic Report</title>
+            <script src="https://cdn.tailwindcss.com"><\/script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+            <style>
+              @page { size: A4; margin: 12mm; }
+              body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: white; color: #0f172a; }
+            </style>
+          </head>
+          <body class="p-6">
+            <div class="max-w-3xl mx-auto space-y-6">
+              ${reportHtml}
+            </div>
+            <script>
+              window.onload = function() {
+                setTimeout(function() {
+                  window.print();
+                }, 450);
+              };
+            <\/script>
+          </body>
+          </html>
+        `);
+        printWindow.document.close();
+      } else {
+        showToast("Popup blocked. Please allow popups for this site or use Print / Save PDF.", "warning");
+      }
+    }
+
+    function exportStudentBackup() {
+      const data = {
+        paper: 'Paper 3 (9478/03)',
+        sectionBChoice: activeSectionBChoice,
+        name: document.getElementById('student-name').value.trim(),
+        class: document.getElementById('student-class').value.trim(),
+        tutor: document.getElementById('student-tutor').value,
+        scores: studentScores,
+        errors: studentErrors,
+        exportedAt: new Date().toISOString()
+      };
+
+      const cleanName = (data.name || 'Student').replace(/[^a-zA-Z0-9_-]/g, '_');
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `JPJC_2026_Physics_P3_${cleanName}.json`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function importStudentBackup(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          if (parsed.sectionBChoice) setSectionBChoice(parsed.sectionBChoice);
+          if (parsed.scores) studentScores = sanitizeScores(parsed.scores);
+          if (parsed.errors) studentErrors = parsed.errors;
+          if (parsed.name) document.getElementById('student-name').value = parsed.name;
+          if (parsed.class) document.getElementById('student-class').value = parsed.class;
+          if (parsed.tutor) document.getElementById('student-tutor').value = parsed.tutor;
+
+          saveStudentParticulars();
+          localStorage.setItem('jpjc_p3_student_scores', JSON.stringify(studentScores));
+          localStorage.setItem('jpjc_p3_student_errors', JSON.stringify(studentErrors));
+
+          renderQuestionInputCards();
+          updateAllCalculations();
+          updateAnalyticsCharts();
+          showToast("Paper 3 student diagnostic data restored successfully!", "success");
+        } catch (err) {
+          showToast("Invalid backup JSON file.", "error");
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    let resetConfirmationPending = false;
+    function confirmResetPaper() {
+      if (!resetConfirmationPending) {
+        resetConfirmationPending = true;
+        showToast("Click 'Reset' again within 4 seconds to confirm erasing marks.", "warning");
+        setTimeout(() => { resetConfirmationPending = false; }, 4000);
+        return;
+      }
+
+      resetConfirmationPending = false;
+      studentScores = {};
+      studentErrors = {};
+      localStorage.removeItem('jpjc_p3_student_scores');
+      localStorage.removeItem('jpjc_p3_student_errors');
+      renderQuestionInputCards();
+      updateAllCalculations();
+      updateAnalyticsCharts();
+      showToast("All marks and answers have been reset.", "info");
+    }
+
+    function showToast(message, type = 'info') {
+      let toastContainer = document.getElementById('toast-container');
+      if (!toastContainer) {
+        toastContainer = document.createElement('div');
+        toastContainer.id = 'toast-container';
+        toastContainer.className = 'fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none';
+        document.body.appendChild(toastContainer);
+      }
+      const toast = document.createElement('div');
+      const bg = type === 'success' ? 'bg-emerald-600' : type === 'warning' ? 'bg-amber-600' : type === 'error' ? 'bg-rose-600' : 'bg-slate-800';
+      toast.className = `${bg} text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-lg transition-all duration-300 transform translate-y-2 opacity-0 pointer-events-auto flex items-center gap-2`;
+      toast.innerHTML = `<span>${message}</span>`;
+      toastContainer.appendChild(toast);
+      setTimeout(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+      }, 10);
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+  </script>
+</body>
+</html>
