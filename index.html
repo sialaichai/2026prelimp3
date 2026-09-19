@@ -45,22 +45,21 @@
     }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased selection:bg-blue-500 selection:text-white">
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased selection:bg-rose-500 selection:text-white">
 
   <!-- Header -->
   <header class="bg-gradient-to-r from-red-700 via-rose-700 to-red-700 text-white border-b border-red-800 sticky top-0 z-40 shadow-md no-print">
-  <!--<header class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white border-b border-slate-800 sticky top-0 z-40 shadow-md no-print"> --->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4">
       <div class="flex items-center space-x-3.5">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-blue-500 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-rose-950 to-red-900 flex items-center justify-center shadow-lg shadow-red-900/30">
           <i class="fa-solid fa-atom text-white text-xl"></i>
         </div>
         <div>
           <div class="flex items-center gap-2">
-            <span class="text-[10px] uppercase tracking-wider font-extrabold px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-400/30">JC2 Preliminary Examination</span>
-            <span class="text-[10px] text-slate-400 font-mono">SEAB Syllabus 9478/03 (Paper 3)</span>
+            <span class="text-[10px] uppercase tracking-wider font-extrabold px-2 py-0.5 rounded bg-white/20 text-white border border-white/30">JC2 Preliminary Examination</span>
+            <span class="text-[10px] text-rose-200 font-mono">SEAB Syllabus 9478/03 (Paper 3)</span>
           </div>
-          <h1 class="text-base sm:text-lg font-black tracking-tight text-slate-100 flex items-center gap-2">
+          <h1 class="text-base sm:text-lg font-black tracking-tight text-white flex items-center gap-2">
             JPJC 2026 H2 Physics Paper 3 Diagnostic & Feedback System
           </h1>
         </div>
@@ -68,17 +67,17 @@
 
       <!-- Action Utilities -->
       <div class="flex items-center gap-2 text-xs">
-        <button type="button" onclick="triggerPrint()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-1.5 font-medium shadow-sm">
-          <i class="fa-solid fa-print text-blue-400"></i> Print Diagnostic
+        <button type="button" onclick="triggerPrint()" class="px-3 py-1.5 rounded-lg bg-red-900/80 hover:bg-red-800 text-slate-100 border border-red-700 transition flex items-center gap-1.5 font-medium shadow-sm">
+          <i class="fa-solid fa-print text-rose-300"></i> Print Diagnostic
         </button>
-        <button type="button" onclick="exportStudentBackup()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-1.5 font-medium shadow-sm">
-          <i class="fa-solid fa-download text-emerald-400"></i> Backup
+        <button type="button" onclick="exportStudentBackup()" class="px-3 py-1.5 rounded-lg bg-red-900/80 hover:bg-red-800 text-slate-100 border border-red-700 transition flex items-center gap-1.5 font-medium shadow-sm">
+          <i class="fa-solid fa-download text-emerald-300"></i> Backup
         </button>
-        <label class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-1.5 font-medium shadow-sm cursor-pointer">
-          <i class="fa-solid fa-upload text-amber-400"></i> Restore
+        <label class="px-3 py-1.5 rounded-lg bg-red-900/80 hover:bg-red-800 text-slate-100 border border-red-700 transition flex items-center gap-1.5 font-medium shadow-sm cursor-pointer">
+          <i class="fa-solid fa-upload text-amber-300"></i> Restore
           <input type="file" id="restore-file-input" class="hidden" accept=".json" onchange="importStudentBackup(event)">
         </label>
-        <button type="button" onclick="confirmResetPaper()" class="px-3 py-1.5 rounded-lg bg-rose-900/30 hover:bg-rose-900/50 text-rose-300 border border-rose-800/50 transition flex items-center gap-1.5 font-medium">
+        <button type="button" onclick="confirmResetPaper()" class="px-3 py-1.5 rounded-lg bg-rose-950/80 hover:bg-rose-950 text-rose-200 border border-rose-800 transition flex items-center gap-1.5 font-medium">
           <i class="fa-solid fa-rotate-left"></i> Reset
         </button>
       </div>
@@ -109,7 +108,7 @@
         <div class="h-8 w-px bg-slate-200"></div>
         <div>
           <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">Section B Option</span>
-          <span id="header-section-b-choice" class="text-xs font-bold font-mono px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200">Q8 Selected</span>
+          <span id="header-section-b-choice" class="text-xs font-bold font-mono px-2 py-0.5 rounded bg-rose-50 text-rose-700 border border-rose-200">Q8 Selected</span>
         </div>
       </div>
 
@@ -118,10 +117,10 @@
         <div class="hidden sm:flex flex-col text-right">
           <span class="text-[11px] font-semibold text-slate-500" id="distinction-label">53 Marks to Distinction ('A')</span>
           <div class="w-36 h-2 bg-slate-100 rounded-full overflow-hidden mt-1 border border-slate-200">
-            <div id="distinction-progress-bar" class="h-full bg-gradient-to-r from-blue-500 to-indigo-600 w-0 transition-all duration-300"></div>
+            <div id="distinction-progress-bar" class="h-full bg-gradient-to-r from-rose-500 to-red-600 w-0 transition-all duration-300"></div>
           </div>
         </div>
-        <button type="button" onclick="submitToTeacher()" id="submit-btn" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-xs sm:text-sm transition flex items-center gap-2 shadow-md shadow-blue-600/20">
+        <button type="button" onclick="submitToTeacher()" id="submit-btn" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-bold text-xs sm:text-sm transition flex items-center gap-2 shadow-md shadow-rose-600/20">
           <i class="fa-solid fa-cloud-arrow-up"></i> Submit to Teacher
         </button>
       </div>
@@ -134,7 +133,7 @@
     <!-- Navigation Tabs -->
     <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden no-print">
       <nav class="flex flex-wrap border-b border-slate-200">
-        <button type="button" onclick="switchTab('tab-entry')" id="tab-btn-entry" class="tab-btn py-3.5 px-4 sm:px-6 text-xs sm:text-sm font-bold border-b-2 border-blue-600 text-blue-600 flex items-center gap-2">
+        <button type="button" onclick="switchTab('tab-entry')" id="tab-btn-entry" class="tab-btn py-3.5 px-4 sm:px-6 text-xs sm:text-sm font-bold border-b-2 border-rose-600 text-rose-600 flex items-center gap-2">
           <i class="fa-solid fa-pen-to-square"></i> 1. Mark Entry (Sec A & Sec B)
         </button>
         <button type="button" onclick="switchTab('tab-analytics')" id="tab-btn-analytics" class="tab-btn py-3.5 px-4 sm:px-6 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2">
@@ -159,22 +158,22 @@
       <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
         <div class="flex items-center justify-between border-b border-slate-100 pb-3">
           <h2 class="font-bold text-slate-900 text-sm flex items-center gap-2">
-            <i class="fa-solid fa-id-card text-blue-600"></i> Student Particulars
+            <i class="fa-solid fa-id-card text-rose-600"></i> Student Particulars
           </h2>
           <span class="text-[11px] text-slate-400 font-medium">Synced with Teacher Google Sheet</span>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1">Student Full Name <span class="text-rose-500">*</span></label>
-            <input type="text" id="student-name" placeholder="e.g. Rachel Lim" oninput="saveStudentParticulars()" class="w-full text-xs sm:text-sm px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition">
+            <input type="text" id="student-name" placeholder="e.g. Rachel Lim" oninput="saveStudentParticulars()" class="w-full text-xs sm:text-sm px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-rose-500 focus:ring-2 focus:ring-rose-100 outline-none transition">
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1">Class <span class="text-rose-500">*</span></label>
-            <input type="text" id="student-class" placeholder="e.g. 26S01" oninput="saveStudentParticulars()" class="w-full text-xs sm:text-sm px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition">
+            <input type="text" id="student-class" placeholder="e.g. 26S01" oninput="saveStudentParticulars()" class="w-full text-xs sm:text-sm px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-rose-500 focus:ring-2 focus:ring-rose-100 outline-none transition">
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1">Physics Tutor <span class="text-rose-500">*</span></label>
-            <select id="student-tutor" onchange="saveStudentParticulars()" class="w-full text-xs sm:text-sm px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition bg-white">
+            <select id="student-tutor" onchange="saveStudentParticulars()" class="w-full text-xs sm:text-sm px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-rose-500 focus:ring-2 focus:ring-rose-100 outline-none transition bg-white">
               <option value="">Select Tutor...</option>
               <option value="Mr Lee">Mr Lee</option>
               <option value="Mr Oh">Mr Oh</option>
@@ -187,15 +186,15 @@
       </div>
 
       <!-- Section B Option Choice Selector -->
-      <div class="bg-gradient-to-r from-indigo-900 to-slate-900 text-white p-5 rounded-2xl shadow-sm space-y-3">
+      <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white p-5 rounded-2xl shadow-sm space-y-3">
         <div class="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <span class="text-[10px] uppercase font-bold tracking-wider text-indigo-300">Section B Candidate Selection (20 Marks)</span>
+            <span class="text-[10px] uppercase font-bold tracking-wider text-rose-300">Section B Candidate Selection (20 Marks)</span>
             <h3 class="text-sm sm:text-base font-black">Choose your attempted Section B Question:</h3>
             <p class="text-xs text-slate-300 mt-0.5">Under SEAB Syllabus 9478/03, candidates answer either Question 8 OR Question 9. Your total score is calculated out of 75 marks.</p>
           </div>
           <div class="flex items-center gap-2 bg-white/10 p-1.5 rounded-xl border border-white/10">
-            <button type="button" onclick="setSectionBChoice('Q8')" id="sec-b-btn-Q8" class="px-3.5 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-blue-600 text-white shadow-sm">
+            <button type="button" onclick="setSectionBChoice('Q8')" id="sec-b-btn-Q8" class="px-3.5 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-rose-600 text-white shadow-sm">
               <i class="fa-solid fa-bolt"></i> Q8: Electric Fields & Capacitors (20m)
             </button>
             <button type="button" onclick="setSectionBChoice('Q9')" id="sec-b-btn-Q9" class="px-3.5 py-2 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 bg-transparent text-slate-300 hover:text-white">
@@ -206,12 +205,12 @@
       </div>
 
       <!-- Quick Guidance Banner -->
-      <div class="p-4 rounded-xl bg-blue-50 border border-blue-200 text-blue-900 text-xs flex items-start gap-3">
-        <i class="fa-solid fa-circle-info text-blue-600 text-base mt-0.5"></i>
+      <div class="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-950 text-xs flex items-start gap-3">
+        <i class="fa-solid fa-circle-info text-rose-600 text-base mt-0.5"></i>
         <div class="leading-relaxed">
           <span class="font-bold">Booklet Page-by-Page Guided Data Entry:</span> 
           Questions are organized into alternating colored blocks corresponding to the physical pages of your 2026 JPJC Paper 3 booklet (Pages 4 to 28). 
-          Click the earned mark for each sub-part. If you dropped marks, tag the error cause (Careless, Recall, Concept, Keywords, or Time) to generate targeted diagnostic coaching.
+          Click the earned mark for each sub-part. If you dropped any marks, select the root cause (Careless, Recall, Concept, Keywords, or Time) to generate targeted diagnostic coaching in Tab 3.
         </div>
       </div>
 
@@ -241,7 +240,7 @@
         <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col">
           <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
             <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
-              <i class="fa-solid fa-chart-simple text-blue-600"></i> Topic Mastery Breakdown
+              <i class="fa-solid fa-chart-simple text-rose-600"></i> Topic Mastery Breakdown
             </h3>
             <span class="text-[11px] font-semibold text-slate-400">Mastery % by Topic</span>
           </div>
@@ -276,17 +275,17 @@
     <!-- Tab 3: Advisory & Coaching -->
     <div id="tab-feedback" class="tab-content hidden space-y-6">
       <!-- Target Grade Recovery Trajectory -->
-      <div class="bg-gradient-to-br from-indigo-900 via-slate-900 to-slate-900 text-white rounded-2xl p-6 shadow-md space-y-4">
+      <div class="bg-gradient-to-br from-slate-900 via-rose-950 to-slate-900 text-white rounded-2xl p-6 shadow-md space-y-4">
         <div class="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <span class="text-[11px] font-bold text-blue-300 uppercase tracking-wider">Algorithmic Recovery Engine</span>
+            <span class="text-[11px] font-bold text-rose-300 uppercase tracking-wider">Algorithmic Recovery Engine</span>
             <h3 class="text-base sm:text-lg font-black text-white flex items-center gap-2">
               <i class="fa-solid fa-stairs text-amber-400"></i> Target Grade Recovery Trajectory
             </h3>
           </div>
           <div class="flex items-center gap-2 text-xs">
             <span class="text-slate-300 font-medium">Select Target:</span>
-            <button type="button" onclick="setTargetGrade('A')" id="target-btn-A" class="px-2.5 py-1 rounded font-bold bg-blue-600 text-white">A (53m)</button>
+            <button type="button" onclick="setTargetGrade('A')" id="target-btn-A" class="px-2.5 py-1 rounded font-bold bg-rose-600 text-white">A (53m)</button>
             <button type="button" onclick="setTargetGrade('B')" id="target-btn-B" class="px-2.5 py-1 rounded font-bold bg-slate-800 text-slate-300 hover:bg-slate-700">B (45m)</button>
             <button type="button" onclick="setTargetGrade('C')" id="target-btn-C" class="px-2.5 py-1 rounded font-bold bg-slate-800 text-slate-300 hover:bg-slate-700">C (42m)</button>
             <button type="button" onclick="setTargetGrade('D')" id="target-btn-D" class="px-2.5 py-1 rounded font-bold bg-slate-800 text-slate-300 hover:bg-slate-700">D (38m)</button>
@@ -387,7 +386,7 @@
                 <i class="fa-solid fa-lock-open"></i>
               </div>
               <div>
-                <h3 class="font-bold text-slate-900 text-base">Physics Cohort Dashboard</h3>
+                <h3 class="font-bold text-slate-900 text-base">Physics Cohort Dashboard (Paper 3)</h3>
                 <span class="text-xs text-slate-400">Live submissions from Google Sheet</span>
               </div>
             </div>
@@ -404,70 +403,144 @@
             </div>
           </div>
 
-          <!-- Cohort Metrics Cards -->
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
-              <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Total Submissions</span>
-              <span id="metric-total-subs" class="text-2xl font-black font-mono text-slate-900">0</span>
-            </div>
-            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
-              <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Cohort Mean Score</span>
-              <div class="flex items-baseline gap-1">
-                <span id="metric-mean-score" class="text-2xl font-black font-mono text-blue-600">0.0</span>
-                <span class="text-[10px] text-slate-400">/ 75</span>
+          <!-- Multi-Criteria Filter Controls: Tutor + Class + Search -->
+          <div class="bg-slate-50/80 p-3.5 rounded-xl border border-slate-200 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex flex-wrap items-center gap-3">
+              <div class="flex items-center gap-2">
+                <label class="text-xs font-bold text-slate-700"><i class="fa-solid fa-user-tie text-indigo-500 mr-1"></i>Tutor:</label>
+                <select id="teacher-tutor-filter" onchange="applyTeacherDashboardFilters()" class="text-xs px-3 py-1.5 rounded-lg border border-slate-300 bg-white font-medium focus:ring-2 focus:ring-indigo-500 outline-none">
+                  <option value="ALL">All Tutors</option>
+                  <option value="Mr Lee">Mr Lee</option>
+                  <option value="Mr Oh">Mr Oh</option>
+                  <option value="Mr Pang">Mr Pang</option>
+                  <option value="Mr Sia">Mr Sia</option>
+                  <option value="Mr Tan">Mr Tan</option>
+                </select>
               </div>
-            </div>
-            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
-              <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Distinction Rate</span>
-              <span id="metric-distinction-rate" class="text-2xl font-black font-mono text-indigo-600">0.0%</span>
-              <span class="text-[10px] text-slate-400 block">(Score &ge; 53)</span>
-            </div>
-            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
-              <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Pass Rate (&ge; E)</span>
-              <span id="metric-pass-rate" class="text-2xl font-black font-mono text-emerald-600">0.0%</span>
-              <span class="text-[10px] text-slate-400 block">(Score &ge; 34)</span>
-            </div>
-          </div>
-
-          <!-- Roster Filter Controls -->
-          <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
-            <div class="flex items-center gap-2">
-              <label class="text-xs font-bold text-slate-600">Filter by Tutor:</label>
-              <select id="teacher-tutor-filter" onchange="renderCohortTable()" class="text-xs px-3 py-1.5 rounded-lg border border-slate-300 bg-white font-medium focus:ring-1 focus:ring-indigo-500 outline-none">
-                <option value="ALL">All Tutors</option>
-                <option value="Mr Lee">Mr Lee</option>
-                <option value="Mr Oh">Mr Oh</option>
-                <option value="Mr Pang">Mr Pang</option>
-                <option value="Mr Sia">Mr Sia</option>
-                <option value="Mr Tan">Mr Tan</option>
-              </select>
+              <div class="flex items-center gap-2">
+                <label class="text-xs font-bold text-slate-700"><i class="fa-solid fa-users-rectangle text-blue-500 mr-1"></i>Class:</label>
+                <select id="teacher-class-filter" onchange="applyTeacherDashboardFilters()" class="text-xs px-3 py-1.5 rounded-lg border border-slate-300 bg-white font-medium focus:ring-2 focus:ring-indigo-500 outline-none">
+                  <option value="ALL">All Classes</option>
+                </select>
+              </div>
             </div>
             <div class="relative w-full sm:w-64">
               <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
-              <input type="text" id="roster-search" placeholder="Search student name or class..." oninput="renderCohortTable()" class="w-full text-xs pl-8 pr-3 py-1.5 rounded-lg border border-slate-300 focus:ring-1 focus:ring-indigo-500 outline-none">
+              <input type="text" id="roster-search" placeholder="Search student name..." oninput="applyTeacherDashboardFilters()" class="w-full text-xs pl-8 pr-3 py-1.5 rounded-lg border border-slate-300 bg-white focus:ring-2 focus:ring-indigo-500 outline-none">
+            </div>
+          </div>
+
+          <!-- Filtered Group Summary Statistics Cards -->
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-extrabold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
+                <i class="fa-solid fa-chart-line text-blue-600"></i> Filtered Group Summary Statistics
+              </span>
+              <span id="filtered-group-indicator" class="text-[11px] font-semibold text-indigo-600 bg-indigo-50 px-2.5 py-0.5 rounded-full border border-indigo-200">
+                All Students (0)
+              </span>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+              <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Filtered Students</span>
+                <span id="metric-total-subs" class="text-2xl font-black font-mono text-slate-900">0</span>
+              </div>
+              <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Group Mean Score</span>
+                <div class="flex items-baseline gap-1">
+                  <span id="metric-mean-score" class="text-2xl font-black font-mono text-blue-600">0.0</span>
+                  <span class="text-[10px] text-slate-400">/ 75</span>
+                </div>
+              </div>
+              <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Distinction Rate</span>
+                <span id="metric-distinction-rate" class="text-2xl font-black font-mono text-indigo-600">0.0%</span>
+                <span class="text-[10px] text-slate-400 block">(Score &ge; 53m)</span>
+              </div>
+              <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Pass Rate (&ge; E)</span>
+                <span id="metric-pass-rate" class="text-2xl font-black font-mono text-emerald-600">0.0%</span>
+                <span class="text-[10px] text-slate-400 block">(Score &ge; 34m)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Filtered Group Root-Cause Mark Leak Diagnosis Card -->
+          <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/60 space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-2">
+              <div>
+                <h4 class="font-bold text-slate-900 text-xs sm:text-sm flex items-center gap-2">
+                  <i class="fa-solid fa-stethoscope text-rose-600"></i> Group Mark Leak Root-Cause Diagnosis
+                </h4>
+                <p class="text-[11px] text-slate-500">Aggregated breakdown of student-identified error causes across all questions for the filtered group</p>
+              </div>
+              <span id="group-leak-total-badge" class="text-[11px] font-mono font-bold text-slate-600 bg-white px-2.5 py-0.5 rounded-full border border-slate-200">
+                0 total tagged leaks
+              </span>
+            </div>
+            <div id="group-leak-causes-container" class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+              <!-- Dynamically populated by renderGroupRootCauses -->
+            </div>
+          </div>
+
+          <!-- Filtered Group Bloom's / Thinking & Cognitive Skills Mastery -->
+          <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/60 space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-2">
+              <h4 class="font-bold text-slate-900 text-xs sm:text-sm flex items-center gap-2">
+                <i class="fa-solid fa-brain text-purple-600"></i> Group Performance by Thinking & Question Skills (Bloom Levels)
+              </h4>
+              <span class="text-[11px] text-slate-500">Group mastery averaged across all filtered students</span>
+            </div>
+            <div id="group-skills-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <!-- Group Item Analysis by Question Sub-Part -->
+          <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/60 space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-2">
+              <div>
+                <h4 class="font-bold text-slate-900 text-xs sm:text-sm flex items-center gap-2">
+                  <i class="fa-solid fa-list-ol text-blue-600"></i> Group Sub-Part Facility Rate & Error Analysis
+                </h4>
+                <p class="text-[11px] text-slate-500">Facility rate = Group average score &divide; Maximum question marks (evaluated for candidates who attempted each question)</p>
+              </div>
+              <div class="flex items-center gap-1.5 text-[10px]">
+                <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold">&ge;70% Secure</span>
+                <span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800 font-bold">50-69% Consolidate</span>
+                <span class="px-2 py-0.5 rounded bg-rose-100 text-rose-800 font-bold">&lt;50% Critical</span>
+              </div>
+            </div>
+            <div id="group-items-container" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2.5 max-h-80 overflow-y-auto p-1">
+              <!-- Dynamically populated by renderGroupItemAnalysis -->
             </div>
           </div>
 
           <!-- Student Roster Table -->
-          <div class="overflow-x-auto border border-slate-200 rounded-xl">
-            <table class="w-full text-left text-xs border-collapse">
-              <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200">
-                <tr>
-                  <th class="py-3 px-3.5">Student Name</th>
-                  <th class="py-3 px-3.5">Class</th>
-                  <th class="py-3 px-3.5">Tutor</th>
-                  <th class="py-3 px-3.5 text-center">Score / 75</th>
-                  <th class="py-3 px-3.5 text-center">%</th>
-                  <th class="py-3 px-3.5 text-center">Grade</th>
-                  <th class="py-3 px-3.5">Sec B</th>
-                  <th class="py-3 px-3.5">Submitted At</th>
-                  <th class="py-3 px-3.5 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody id="cohort-table-body" class="divide-y divide-slate-100">
-                <!-- Dynamically rendered -->
-              </tbody>
-            </table>
+          <div class="space-y-2">
+            <h4 class="font-bold text-slate-900 text-xs flex items-center gap-2">
+              <i class="fa-solid fa-table-list text-slate-600"></i> Filtered Student Roster
+            </h4>
+            <div class="overflow-x-auto border border-slate-200 rounded-xl bg-white">
+              <table class="w-full text-left text-xs border-collapse">
+                <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200">
+                  <tr>
+                    <th class="py-3 px-3.5">Student Name</th>
+                    <th class="py-3 px-3.5">Class</th>
+                    <th class="py-3 px-3.5">Tutor</th>
+                    <th class="py-3 px-3.5 text-center">Score / 75</th>
+                    <th class="py-3 px-3.5 text-center">%</th>
+                    <th class="py-3 px-3.5 text-center">Grade</th>
+                    <th class="py-3 px-3.5 text-center">Sec B</th>
+                    <th class="py-3 px-3.5">Submitted At</th>
+                    <th class="py-3 px-3.5 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="cohort-table-body" class="divide-y divide-slate-100">
+                  <!-- Dynamically rendered -->
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
@@ -482,7 +555,7 @@
     <div class="bg-white w-full max-w-4xl rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[90vh]">
       <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between border-b border-slate-800">
         <div class="flex items-center gap-3">
-          <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-sm shadow-md">
+          <div class="w-8 h-8 rounded-lg bg-rose-600 flex items-center justify-center text-sm shadow-md">
             <i class="fa-solid fa-file-invoice"></i>
           </div>
           <div>
@@ -510,7 +583,7 @@
           <button type="button" onclick="openPrintInNewWindow()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold transition text-xs flex items-center gap-1.5 shadow-sm">
             <i class="fa-solid fa-arrow-up-right-from-square"></i> Open in New Window
           </button>
-          <button type="button" onclick="triggerBrowserPrint()" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold transition text-xs flex items-center gap-1.5 shadow-md shadow-blue-600/20">
+          <button type="button" onclick="triggerBrowserPrint()" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold transition text-xs flex items-center gap-1.5 shadow-md shadow-rose-600/20">
             <i class="fa-solid fa-print"></i> Print / Save as PDF
           </button>
         </div>
@@ -523,7 +596,7 @@
     <div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[90vh]">
       <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between">
         <div class="flex items-center gap-3">
-          <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-sm">
+          <div class="w-8 h-8 rounded-lg bg-rose-600 flex items-center justify-center text-sm">
             <i class="fa-solid fa-user-graduate"></i>
           </div>
           <div>
@@ -540,13 +613,13 @@
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-3.5 rounded-xl border border-slate-200">
           <div><span class="text-slate-400 block text-[10px] uppercase font-bold">Class</span><strong id="inspect-class" class="text-slate-900 text-xs">-</strong></div>
           <div><span class="text-slate-400 block text-[10px] uppercase font-bold">Tutor</span><strong id="inspect-tutor" class="text-slate-900 text-xs">-</strong></div>
-          <div><span class="text-slate-400 block text-[10px] uppercase font-bold">Total Score</span><strong id="inspect-score" class="text-blue-600 text-xs font-mono font-bold">0 / 75</strong></div>
+          <div><span class="text-slate-400 block text-[10px] uppercase font-bold">Total Score</span><strong id="inspect-score" class="text-rose-600 text-xs font-mono font-bold">0 / 75</strong></div>
           <div><span class="text-slate-400 block text-[10px] uppercase font-bold">Grade</span><strong id="inspect-grade" class="text-xs font-mono font-bold">U</strong></div>
         </div>
 
         <div>
           <h4 class="font-bold text-slate-800 mb-2 flex items-center gap-1.5">
-            <i class="fa-solid fa-list-check text-blue-600"></i> Marks Breakdown by Sub-part
+            <i class="fa-solid fa-list-check text-rose-600"></i> Marks Breakdown by Sub-part
           </h4>
           <div id="inspect-breakdown-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-2 max-h-60 overflow-y-auto p-1">
             <!-- Populated dynamically -->
@@ -558,7 +631,7 @@
         <button type="button" onclick="closeInspectModal()" class="px-3.5 py-2 rounded-xl text-slate-600 hover:bg-slate-200 font-semibold transition text-xs">
           Close
         </button>
-        <button type="button" id="inspect-load-btn" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold transition text-xs flex items-center gap-2 shadow-sm shadow-blue-600/20">
+        <button type="button" id="inspect-load-btn" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold transition text-xs flex items-center gap-2 shadow-sm shadow-rose-600/20">
           <i class="fa-solid fa-arrow-up-right-from-square"></i> Load into Workspace & Analytics
         </button>
       </div>
@@ -759,19 +832,17 @@
       activeSectionBChoice = choice;
       localStorage.setItem('jpjc_p3_secb_choice', choice);
 
-      // Update Section B header label
       const badge = document.getElementById('header-section-b-choice');
       if (badge) badge.textContent = `${choice} Selected`;
 
-      // Update button styles
       const btnQ8 = document.getElementById('sec-b-btn-Q8');
       const btnQ9 = document.getElementById('sec-b-btn-Q9');
       if (btnQ8 && btnQ9) {
         if (choice === 'Q8') {
-          btnQ8.className = "px-3.5 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-blue-600 text-white shadow-sm";
+          btnQ8.className = "px-3.5 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-rose-600 text-white shadow-sm";
           btnQ9.className = "px-3.5 py-2 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 bg-transparent text-slate-300 hover:text-white";
         } else {
-          btnQ9.className = "px-3.5 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-blue-600 text-white shadow-sm";
+          btnQ9.className = "px-3.5 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-rose-600 text-white shadow-sm";
           btnQ8.className = "px-3.5 py-2 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 bg-transparent text-slate-300 hover:text-white";
         }
       }
@@ -812,10 +883,10 @@
         const btnQ9 = document.getElementById('sec-b-btn-Q9');
         if (btnQ8 && btnQ9) {
           if (activeSectionBChoice === 'Q8') {
-            btnQ8.className = "px-3.5 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-blue-600 text-white shadow-sm";
+            btnQ8.className = "px-3.5 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-rose-600 text-white shadow-sm";
             btnQ9.className = "px-3.5 py-2 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 bg-transparent text-slate-300 hover:text-white";
           } else {
-            btnQ9.className = "px-3.5 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-blue-600 text-white shadow-sm";
+            btnQ9.className = "px-3.5 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-rose-600 text-white shadow-sm";
             btnQ8.className = "px-3.5 py-2 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 bg-transparent text-slate-300 hover:text-white";
           }
         }
@@ -845,8 +916,8 @@
       let html = '';
       activePageGroups.forEach((group, index) => {
         const isAlternate = (index % 2 === 1);
-        const groupBg = isAlternate ? 'bg-blue-50/45 border-blue-200/80' : 'bg-white border-slate-200';
-        const groupBadgeColor = isAlternate ? 'bg-blue-600 text-white' : 'bg-slate-800 text-white';
+        const groupBg = isAlternate ? 'bg-rose-50/40 border-rose-200/80' : 'bg-white border-slate-200';
+        const groupBadgeColor = isAlternate ? 'bg-rose-700 text-white' : 'bg-slate-800 text-white';
 
         let pageSubtotalEarned = 0;
         let pageSubtotalMax = 0;
@@ -859,7 +930,7 @@
 
         const sectionBadge = group.section === 'A' 
           ? '<span class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-200 text-slate-700">Section A (Compulsory)</span>'
-          : `<span class="text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-100 text-indigo-700">Section B Choice (${activeSectionBChoice})</span>`;
+          : `<span class="text-[10px] font-bold px-2 py-0.5 rounded bg-rose-100 text-rose-800">Section B Choice (${activeSectionBChoice})</span>`;
 
         html += `
           <div class="rounded-2xl border ${groupBg} p-5 shadow-sm space-y-4 transition">
@@ -874,7 +945,7 @@
               </div>
               <div class="text-xs font-mono font-bold text-slate-600 flex items-center gap-1.5">
                 <span>Page Subtotal:</span>
-                <span id="page-subtotal-${group.page}" class="text-sm font-black text-blue-600">${pageSubtotalEarned}</span>
+                <span id="page-subtotal-${group.page}" class="text-sm font-black text-rose-600">${pageSubtotalEarned}</span>
                 <span class="text-slate-400">/ ${pageSubtotalMax}m</span>
               </div>
             </div>
@@ -884,14 +955,14 @@
         `;
 
         groupQuestions.forEach(q => {
-          const currentScore = studentScores[q.id] !== undefined ? studentScores[q.id] : '';
+          const currentScore = studentScores[q.id] !== undefined ? studentScores[q.id] : 0;
           const currentErr = studentErrors[q.id] || '';
 
           let markButtons = '';
           for (let m = 0; m <= q.max; m++) {
             const isSelected = (currentScore === m);
             const btnClass = isSelected 
-              ? 'bg-blue-600 text-white font-black shadow-md ring-2 ring-blue-400 ring-offset-1 scale-105' 
+              ? 'bg-rose-600 text-white font-black shadow-md ring-2 ring-rose-400 ring-offset-1 scale-105' 
               : 'bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold';
             markButtons += `
               <button type="button" onclick="setQuestionMark('${q.id}', ${m})" class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg text-xs font-mono transition flex items-center justify-center ${btnClass}">
@@ -919,14 +990,14 @@
                   ${markButtons}
                 </div>
 
-                <!-- Error Cause Dropdown -->
+                <!-- Updated Error Cause Dropdown -->
                 <select onchange="setQuestionError('${q.id}', this.value)" class="text-xs px-2.5 py-1.5 rounded-lg border border-slate-300 bg-slate-50 focus:bg-white text-slate-700 outline-none">
                   <option value="">Error Cause...</option>
                   <option value="careless" ${currentErr === 'careless' ? 'selected' : ''}>Careless / Math</option>
                   <option value="recall" ${currentErr === 'recall' ? 'selected' : ''}>Recall / Definition</option>
-                  <option value="concept" ${currentErr === 'concept' ? 'selected' : ''}>Concept / Principle</option>
-                  <option value="command" ${currentErr === 'command' ? 'selected' : ''}>Command Word / Keywords</option>
-                  <option value="time" ${currentErr === 'time' ? 'selected' : ''}>Time Pressure</option>
+                  <option value="concept" ${currentErr === 'concept' ? 'selected' : ''}>Wrong Concept / Principle / Formula</option>
+                  <option value="command" ${currentErr === 'command' ? 'selected' : ''}>Missing / Wrong Keywords</option>
+                  <option value="time" ${currentErr === 'time' ? 'selected' : ''}>Blank / Time Pressure</option>
                 </select>
               </div>
             </div>
@@ -1092,7 +1163,7 @@
         html += `
           <tr class="hover:bg-slate-50 transition">
             <td class="py-2.5 px-3 font-semibold text-slate-800 flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+              <span class="w-2 h-2 rounded-full bg-rose-600"></span>
               ${topic}
             </td>
             <td class="py-2.5 px-3 text-slate-500 font-mono text-[11px]">${data.qns.join(', ')}</td>
@@ -1122,9 +1193,9 @@
             datasets: [{
               label: 'Your Mastery %',
               data: [0, 0, 0, 0, 0],
-              backgroundColor: 'rgba(99, 102, 241, 0.25)',
-              borderColor: 'rgba(99, 102, 241, 1)',
-              pointBackgroundColor: 'rgba(79, 70, 229, 1)',
+              backgroundColor: 'rgba(225, 29, 72, 0.25)',
+              borderColor: 'rgba(225, 29, 72, 1)',
+              pointBackgroundColor: 'rgba(190, 18, 60, 1)',
               borderWidth: 2
             }]
           },
@@ -1136,9 +1207,7 @@
                 min: 0,
                 max: 100,
                 ticks: { stepSize: 20, font: { size: 10 } },
-                pointLabels: {
-                  font: { size: 10, weight: 'bold' }
-                }
+                pointLabels: { font: { size: 10, weight: 'bold' } }
               }
             }
           }
@@ -1154,7 +1223,7 @@
             datasets: [{
               label: 'Mastery %',
               data: [0, 0, 0, 0, 0, 0, 0, 0],
-              backgroundColor: 'rgba(59, 130, 246, 0.7)',
+              backgroundColor: 'rgba(225, 29, 72, 0.75)',
               borderRadius: 6
             }]
           },
@@ -1221,7 +1290,7 @@
         const btn = document.getElementById(`target-btn-${g}`);
         if (btn) {
           btn.className = (g === target) 
-            ? 'px-2.5 py-1 rounded font-bold bg-blue-600 text-white' 
+            ? 'px-2.5 py-1 rounded font-bold bg-rose-600 text-white' 
             : 'px-2.5 py-1 rounded font-bold bg-slate-800 text-slate-300 hover:bg-slate-700';
         }
       });
@@ -1253,13 +1322,13 @@
               You need <strong class="text-white">${gap} more marks</strong> to attain Grade ${activeTargetGrade}.
             </div>
             <div class="mt-2 text-xs text-slate-300">
-              <strong class="text-blue-300">Highest-Yield Recovery Pathway:</strong> Target dropped marks in: ${suggestions || 'all sub-parts'}. Consolidating definitions and algebraic accuracy in these questions will bridge the ${gap}-mark gap.
+              <strong class="text-rose-300">Highest-Yield Recovery Pathway:</strong> Target dropped marks in: ${suggestions || 'all sub-parts'}. Consolidating definitions and algebraic accuracy in these questions will bridge the ${gap}-mark gap.
             </div>
           `;
         }
       }
 
-      // Root Cause Summary
+      // Root Cause Summary with updated descriptive labels
       const summaryContainer = document.getElementById('error-causes-summary');
       if (summaryContainer) {
         const counts = { careless: 0, recall: 0, concept: 0, command: 0, time: 0 };
@@ -1277,15 +1346,15 @@
             <span class="text-lg font-black font-mono text-amber-600">${counts.recall}</span>
           </div>
           <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 text-center">
-            <span class="text-[10px] uppercase font-bold text-slate-500 block">Concept Leak</span>
+            <span class="text-[10px] uppercase font-bold text-slate-500 block">Wrong Concept / Principle / Formula</span>
             <span class="text-lg font-black font-mono text-rose-600">${counts.concept}</span>
           </div>
           <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 text-center">
-            <span class="text-[10px] uppercase font-bold text-slate-500 block">Keywords Missing</span>
+            <span class="text-[10px] uppercase font-bold text-slate-500 block">Missing / Wrong Keywords</span>
             <span class="text-lg font-black font-mono text-purple-600">${counts.command}</span>
           </div>
           <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 text-center">
-            <span class="text-[10px] uppercase font-bold text-slate-500 block">Time Deficit</span>
+            <span class="text-[10px] uppercase font-bold text-slate-500 block">Blank / Time Pressure</span>
             <span class="text-lg font-black font-mono text-blue-600">${counts.time}</span>
           </div>
         `;
@@ -1449,7 +1518,6 @@
 
       let html = '';
       topicAdviceData.forEach(t => {
-        // Skip Section B topics not currently selected
         if (t.id === 'Topic 14: Electric Fields & Capacitance' && activeSectionBChoice !== 'Q8') return;
         if (t.id === 'Topic 20: Nuclear Physics' && activeSectionBChoice !== 'Q9') return;
 
@@ -1544,13 +1612,12 @@
 
       const btn = document.getElementById('submit-btn');
       const originalText = btn.innerHTML;
-      btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Transmitting...`;
+      btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Submitting...`;
       btn.disabled = true;
 
       try {
         const payloadString = JSON.stringify(payload);
 
-        // Primary: Plain text POST fetch
         await fetch(GOOGLE_SHEET_WEBAPP_URL, {
           method: 'POST',
           mode: 'no-cors',
@@ -1558,13 +1625,13 @@
           body: payloadString
         });
 
-        btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> Submitted!`;
+        btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> Submitted Successfully!`;
         btn.className = "px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-xs sm:text-sm transition flex items-center gap-2 shadow-md";
-        showToast("Paper 3 submitted! Check Google Sheet or Teacher Portal.", "success");
+        showToast("Paper 3 submitted to Google Sheet successfully!", "success");
         
         setTimeout(() => {
           btn.innerHTML = originalText;
-          btn.className = "px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-xs sm:text-sm transition flex items-center gap-2 shadow-md shadow-blue-600/20";
+          btn.className = "px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-bold text-xs sm:text-sm transition flex items-center gap-2 shadow-md shadow-rose-600/20";
           btn.disabled = false;
         }, 3500);
 
@@ -1623,8 +1690,8 @@
         document.getElementById('teacher-dashboard').classList.remove('hidden');
         document.getElementById('teacher-tab-lock-icon').className = 'fa-solid fa-lock-open text-emerald-500';
 
-        renderCohortTable();
-        updateCohortMetrics();
+        populateTeacherClassFilter();
+        applyTeacherDashboardFilters();
 
       } catch (err) {
         console.error("Auth fetch error:", err);
@@ -1647,8 +1714,8 @@
         const result = await response.json();
         if (Array.isArray(result)) {
           cohortSubmissions = result;
-          renderCohortTable();
-          updateCohortMetrics();
+          populateTeacherClassFilter();
+          applyTeacherDashboardFilters();
           if (isManual) showToast("Cohort roster refreshed from Google Sheet.", "success");
         }
       } catch (err) {
@@ -1667,10 +1734,65 @@
       document.getElementById('teacher-tab-lock-icon').className = 'fa-solid fa-lock text-amber-500';
     }
 
-    function updateCohortMetrics() {
-      const total = cohortSubmissions.length;
-      document.getElementById('cohort-badge').textContent = total;
+    function populateTeacherClassFilter() {
+      const classSelect = document.getElementById('teacher-class-filter');
+      if (!classSelect) return;
+
+      const currentSelected = classSelect.value || 'ALL';
+      const classesSet = new Set();
+      cohortSubmissions.forEach(s => {
+        if (s.studentClass && String(s.studentClass).trim() && s.studentClass !== '-') {
+          classesSet.add(String(s.studentClass).trim());
+        }
+      });
+
+      const sortedClasses = Array.from(classesSet).sort();
+      let optionsHtml = '<option value="ALL">All Classes</option>';
+      sortedClasses.forEach(cls => {
+        const isSelected = (cls === currentSelected) ? 'selected' : '';
+        optionsHtml += `<option value="${cls}" ${isSelected}>Class ${cls}</option>`;
+      });
+
+      classSelect.innerHTML = optionsHtml;
+    }
+
+    function getFilteredCohortSubmissions() {
+      const tutorFilter = document.getElementById('teacher-tutor-filter') ? document.getElementById('teacher-tutor-filter').value : 'ALL';
+      const classFilter = document.getElementById('teacher-class-filter') ? document.getElementById('teacher-class-filter').value : 'ALL';
+      const search = (document.getElementById('roster-search') ? document.getElementById('roster-search').value : '').toLowerCase().trim();
+
+      return cohortSubmissions.filter(s => {
+        const matchTutor = (tutorFilter === 'ALL' || s.studentTutor === tutorFilter);
+        const matchClass = (classFilter === 'ALL' || String(s.studentClass || '').trim().toLowerCase() === classFilter.toLowerCase());
+        const matchSearch = (!search || (s.studentName && s.studentName.toLowerCase().includes(search)) || (s.studentClass && s.studentClass.toLowerCase().includes(search)));
+        return matchTutor && matchClass && matchSearch;
+      });
+    }
+
+    let activeFilteredSubmissions = [];
+    function applyTeacherDashboardFilters() {
+      activeFilteredSubmissions = getFilteredCohortSubmissions();
+      updateCohortMetrics(activeFilteredSubmissions);
+      renderGroupRootCauses(activeFilteredSubmissions);
+      renderGroupThinkingSkills(activeFilteredSubmissions);
+      renderGroupItemAnalysis(activeFilteredSubmissions);
+      renderCohortTable(activeFilteredSubmissions);
+    }
+
+    function updateCohortMetrics(filtered) {
+      const total = filtered.length;
+      document.getElementById('cohort-badge').textContent = cohortSubmissions.length;
       document.getElementById('metric-total-subs').textContent = total;
+
+      const tutorFilter = document.getElementById('teacher-tutor-filter').value;
+      const classFilter = document.getElementById('teacher-class-filter').value;
+      const indicator = document.getElementById('filtered-group-indicator');
+      if (indicator) {
+        let label = `Filtered: ${total} Students`;
+        if (tutorFilter !== 'ALL') label += ` • ${tutorFilter}`;
+        if (classFilter !== 'ALL') label += ` • Class ${classFilter}`;
+        indicator.textContent = label;
+      }
 
       if (total === 0) {
         document.getElementById('metric-mean-score').textContent = '0.0';
@@ -1683,7 +1805,7 @@
       let distinctions = 0;
       let passes = 0;
 
-      cohortSubmissions.forEach(s => {
+      filtered.forEach(s => {
         const score = Number(s.totalScore) || 0;
         sumScore += score;
         if (score >= 53) distinctions++;
@@ -1699,18 +1821,188 @@
       document.getElementById('metric-pass-rate').textContent = passRate + '%';
     }
 
-    function renderCohortTable() {
+    function renderGroupRootCauses(filtered) {
+      const container = document.getElementById('group-leak-causes-container');
+      const totalBadge = document.getElementById('group-leak-total-badge');
+      if (!container) return;
+
+      const counts = { careless: 0, recall: 0, concept: 0, command: 0, time: 0 };
+      let totalLeaks = 0;
+
+      filtered.forEach(s => {
+        if (s.errorReasons && typeof s.errorReasons === 'object') {
+          Object.values(s.errorReasons).forEach(err => {
+            if (counts[err] !== undefined) {
+              counts[err]++;
+              totalLeaks++;
+            }
+          });
+        }
+      });
+
+      if (totalBadge) {
+        const avgPerStudent = filtered.length > 0 ? (totalLeaks / filtered.length).toFixed(1) : '0.0';
+        totalBadge.textContent = `${totalLeaks} total tagged leaks (${avgPerStudent} / student avg)`;
+      }
+
+      const leakMeta = [
+        { key: 'careless', label: 'Careless / Math', icon: 'fa-calculator', text: 'text-slate-900', bg: 'bg-white', border: 'border-slate-200', barBg: 'bg-slate-700' },
+        { key: 'recall', label: 'Recall / Defs', icon: 'fa-brain', text: 'text-amber-600', bg: 'bg-amber-50/40', border: 'border-amber-200', barBg: 'bg-amber-500' },
+        { key: 'concept', label: 'Wrong Concept / Principle / Formula', icon: 'fa-lightbulb', text: 'text-rose-600', bg: 'bg-rose-50/40', border: 'border-rose-200', barBg: 'bg-rose-500' },
+        { key: 'command', label: 'Missing / Wrong Keywords', icon: 'fa-key', text: 'text-purple-600', bg: 'bg-purple-50/40', border: 'border-purple-200', barBg: 'bg-purple-500' },
+        { key: 'time', label: 'Blank / Time Pressure', icon: 'fa-stopwatch', text: 'text-blue-600', bg: 'bg-blue-50/40', border: 'border-blue-200', barBg: 'bg-blue-500' }
+      ];
+
+      let html = '';
+      leakMeta.forEach(m => {
+        const count = counts[m.key];
+        const pct = totalLeaks > 0 ? ((count / totalLeaks) * 100).toFixed(1) : '0.0';
+        html += `
+          <div class="p-3 rounded-xl ${m.bg} border ${m.border} flex flex-col justify-between shadow-xs">
+            <div class="flex items-center justify-between text-[10px] uppercase font-bold text-slate-500 mb-1">
+              <span class="flex items-center gap-1"><i class="fa-solid ${m.icon}"></i> ${m.label}</span>
+              <span class="font-mono text-slate-400">${pct}%</span>
+            </div>
+            <div class="flex items-baseline justify-between mt-1">
+              <span class="text-2xl font-black font-mono ${m.text}">${count}</span>
+              <span class="text-[10px] text-slate-400 font-medium">instances</span>
+            </div>
+            <div class="w-full bg-slate-200/70 rounded-full h-1.5 mt-2.5 overflow-hidden">
+              <div class="h-1.5 rounded-full ${m.barBg}" style="width: ${Math.min(100, Number(pct))}%"></div>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function renderGroupThinkingSkills(filtered) {
+      const container = document.getElementById('group-skills-container');
+      if (!container) return;
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div class="col-span-full py-4 text-center text-xs text-slate-400">No student submissions available for the selected filter.</div>`;
+        return;
+      }
+
+      const skillsMap = {
+        'Recall': { earned: 0, totalPossible: 0, label: 'Recall / Define' },
+        'Understand': { earned: 0, totalPossible: 0, label: 'Interpret / Describe' },
+        'Apply': { earned: 0, totalPossible: 0, label: 'Calculate / Apply' },
+        'Analyse': { earned: 0, totalPossible: 0, label: 'Derive / Analyze' },
+        'Evaluate': { earned: 0, totalPossible: 0, label: 'Justify / Evaluate' }
+      };
+
+      filtered.forEach(s => {
+        const scores = sanitizeScores(s.scores || {});
+        const secB = s.sectionBChoice || 'Q8';
+        const activeList = ALL_QUESTIONS.filter(q => q.section === 'A' || q.opt === secB);
+
+        activeList.forEach(q => {
+          if (skillsMap[q.bloom]) {
+            skillsMap[q.bloom].earned += (scores[q.id] || 0);
+            skillsMap[q.bloom].totalPossible += q.max;
+          }
+        });
+      });
+
+      let html = '';
+      Object.entries(skillsMap).forEach(([skill, meta]) => {
+        const masteryPct = meta.totalPossible > 0 ? (meta.earned / meta.totalPossible) * 100 : 0;
+        const avgScore = filtered.length > 0 ? (meta.earned / filtered.length).toFixed(1) : '0.0';
+        const badgeColor = masteryPct >= 70 ? 'bg-emerald-100 text-emerald-800' : masteryPct >= 50 ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800';
+
+        html += `
+          <div class="p-3 rounded-xl bg-white border border-slate-200 shadow-xs space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-slate-800">${meta.label}</span>
+              <span class="text-[10px] font-bold px-1.5 py-0.5 rounded-full ${badgeColor}">${masteryPct.toFixed(0)}%</span>
+            </div>
+            <div class="flex items-baseline justify-between text-xs">
+              <span class="text-slate-500 font-medium">Group Mean:</span>
+              <span class="font-mono font-bold text-slate-900">${avgScore}m avg</span>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+              <div class="bg-rose-600 h-1.5 rounded-full" style="width: ${Math.min(100, masteryPct)}%"></div>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function renderGroupItemAnalysis(filtered) {
+      const container = document.getElementById('group-items-container');
+      if (!container) return;
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div class="col-span-full py-4 text-center text-xs text-slate-400">No question data available for current filter.</div>`;
+        return;
+      }
+
+      let html = '';
+      ALL_QUESTIONS.forEach(q => {
+        let totalQuestionScore = 0;
+        let candidateAttempts = 0;
+        const errCount = { careless: 0, recall: 0, concept: 0, command: 0, time: 0 };
+
+        filtered.forEach(s => {
+          const secB = s.sectionBChoice || 'Q8';
+          if (q.section === 'A' || q.opt === secB) {
+            candidateAttempts++;
+            const scores = sanitizeScores(s.scores || {});
+            totalQuestionScore += (scores[q.id] || 0);
+
+            if (s.errorReasons && s.errorReasons[q.id]) {
+              const errKey = s.errorReasons[q.id];
+              if (errCount[errKey] !== undefined) errCount[errKey]++;
+            }
+          }
+        });
+
+        if (candidateAttempts === 0) return;
+
+        const avgScore = (totalQuestionScore / candidateAttempts).toFixed(1);
+        const facilityPct = (totalQuestionScore / (q.max * candidateAttempts)) * 100;
+        const cardBg = facilityPct >= 70 ? 'bg-emerald-50/70 border-emerald-200 text-emerald-900' : facilityPct >= 50 ? 'bg-amber-50/70 border-amber-200 text-amber-900' : 'bg-rose-50/70 border-rose-200 text-rose-900';
+
+        let topErr = null;
+        let topErrMax = 0;
+        Object.entries(errCount).forEach(([err, cnt]) => {
+          if (cnt > topErrMax) {
+            topErrMax = cnt;
+            topErr = err;
+          }
+        });
+
+        const errLabels = { careless: 'Math', recall: 'Def', concept: 'Wrong Concept', command: 'Keywords', time: 'Blank / Time' };
+        const topErrBadge = topErr ? `<span class="text-[9px] px-1 py-0.2 rounded bg-white/80 border border-slate-200 font-mono text-slate-600">${errLabels[topErr]} (${topErrMax})</span>` : '';
+
+        html += `
+          <div class="p-2 rounded-xl border ${cardBg} flex flex-col justify-between space-y-1 transition hover:shadow-xs">
+            <div class="flex items-center justify-between">
+              <span class="font-mono font-extrabold text-[11px]">${q.title}</span>
+              <span class="font-mono text-[10px] font-black">${facilityPct.toFixed(0)}%</span>
+            </div>
+            <div class="text-[10px] font-mono text-slate-600 flex items-baseline justify-between">
+              <span>Avg:</span>
+              <span class="font-bold">${avgScore}/${q.max}m</span>
+            </div>
+            <div class="pt-0.5 flex justify-end">
+              ${topErrBadge || '<span class="text-[9px] text-slate-400 font-mono">-</span>'}
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function renderCohortTable(filtered = activeFilteredSubmissions) {
       const tbody = document.getElementById('cohort-table-body');
       if (!tbody) return;
-
-      const tutorFilter = document.getElementById('teacher-tutor-filter').value;
-      const search = (document.getElementById('roster-search').value || '').toLowerCase().trim();
-
-      const filtered = cohortSubmissions.filter(s => {
-        const matchTutor = (tutorFilter === 'ALL' || s.studentTutor === tutorFilter);
-        const matchSearch = (!search || (s.studentName && s.studentName.toLowerCase().includes(search)) || (s.studentClass && s.studentClass.toLowerCase().includes(search)));
-        return matchTutor && matchSearch;
-      });
 
       if (filtered.length === 0) {
         tbody.innerHTML = `<tr><td colspan="9" class="text-center py-6 text-slate-400 text-xs">No matching student submissions found.</td></tr>`;
@@ -1731,10 +2023,10 @@
             <td class="py-3 px-3.5 text-center font-mono font-bold text-slate-900">${s.totalScore}</td>
             <td class="py-3 px-3.5 text-center font-mono text-slate-700">${s.percentage}%</td>
             <td class="py-3 px-3.5 text-center"><span class="px-2 py-0.5 rounded-full text-[10px] font-black ${gradeBadge}">${s.grade}</span></td>
-            <td class="py-3 px-3.5 text-center font-mono font-bold text-indigo-600">${secBChoice}</td>
+            <td class="py-3 px-3.5 text-center font-mono font-bold text-rose-600">${secBChoice}</td>
             <td class="py-3 px-3.5 text-[11px] text-slate-400 font-mono">${formattedDate}</td>
             <td class="py-3 px-3.5 text-right">
-              <button type="button" onclick="inspectStudentPaper('${s.id || idx}')" class="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 font-semibold text-[11px] transition">
+              <button type="button" onclick="inspectStudentPaper('${s.id || idx}')" class="px-2.5 py-1 rounded-lg bg-rose-50 text-rose-700 hover:bg-rose-100 font-semibold text-[11px] transition">
                 Inspect
               </button>
             </td>
@@ -1752,7 +2044,7 @@
       currentInspectedSub = student;
 
       document.getElementById('inspect-modal-title').textContent = student.studentName || 'Anonymous Student';
-      document.getElementById('inspect-modal-subtitle').textContent = `Submitted: ${student.submittedAt ? new Date(student.submittedAt).toLocaleString('en-SG') : 'Unknown'}`;
+      document.getElementById('inspect-modal-subtitle').textContent = `Submitted: ${student.submittedAt ? new Date(student.submittedAt).toLocaleString('en-SG') : 'Unknown'} • Section B: ${student.sectionBChoice || 'Q8'}`;
       document.getElementById('inspect-class').textContent = student.studentClass || '-';
       document.getElementById('inspect-tutor').textContent = student.studentTutor || '-';
       document.getElementById('inspect-score').textContent = `${student.totalScore} / 75 (${student.percentage}%)`;
@@ -1835,7 +2127,7 @@
     function switchTab(tabId) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
       document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('border-blue-600', 'text-blue-600');
+        btn.classList.remove('border-rose-600', 'text-rose-600', 'border-blue-600', 'text-blue-600');
         btn.classList.add('border-transparent', 'text-slate-500');
       });
 
@@ -1845,7 +2137,7 @@
       const activeBtn = document.getElementById(`tab-btn-${tabId.replace('tab-', '')}`);
       if (activeBtn) {
         activeBtn.classList.remove('border-transparent', 'text-slate-500');
-        activeBtn.classList.add('border-blue-600', 'text-blue-600');
+        activeBtn.classList.add('border-rose-600', 'text-rose-600');
       }
 
       if (tabId === 'tab-analytics') {
@@ -1911,7 +2203,7 @@
           </div>
           <div class="text-right">
             <span class="text-xs font-mono text-slate-500 block">${formattedDate}</span>
-            <span class="text-xs font-bold text-blue-600 block">SEAB Syllabus 9478 &bull; Section B: ${activeSectionBChoice}</span>
+            <span class="text-xs font-bold text-rose-600 block">SEAB Syllabus 9478 &bull; Section B: ${activeSectionBChoice}</span>
           </div>
         </div>
 
@@ -1920,7 +2212,7 @@
           <div><span class="text-slate-400 block text-[10px] uppercase font-bold">Student Name</span><strong class="text-slate-900 text-xs">${name}</strong></div>
           <div><span class="text-slate-400 block text-[10px] uppercase font-bold">Class</span><strong class="text-slate-900 text-xs font-mono">${sClass}</strong></div>
           <div><span class="text-slate-400 block text-[10px] uppercase font-bold">Physics Tutor</span><strong class="text-slate-900 text-xs">${tutor}</strong></div>
-          <div><span class="text-slate-400 block text-[10px] uppercase font-bold">Overall Result</span><strong class="text-blue-600 text-xs font-mono font-black">${score} / 75 (${pct}%) — Grade ${grade}</strong></div>
+          <div><span class="text-slate-400 block text-[10px] uppercase font-bold">Overall Result</span><strong class="text-rose-600 text-xs font-mono font-black">${score} / 75 (${pct}%) — Grade ${grade}</strong></div>
         </div>
 
         <!-- Section 1: Thinking Skills Breakdown -->
